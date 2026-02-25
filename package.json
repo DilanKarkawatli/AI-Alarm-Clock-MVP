@@ -2,13 +2,15 @@
   "name": "alarm-clock-ai",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "generate:alarm-voice": "node ./scripts/generate-alarm-voice.js",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "generate:alarm-voice": "node ./scripts/generate-alarm-voice.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -17,6 +19,7 @@
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
+    "dotenv": "^17.3.1",
     "eas-cli": "^18.0.3",
     "expo": "~54.0.33",
     "expo-audio": "~1.1.1",

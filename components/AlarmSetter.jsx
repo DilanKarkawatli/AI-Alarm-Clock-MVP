@@ -65,7 +65,6 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 
     const now = new Date();
     const alarm = new Date();
-	// const alarm = new Date(Date.now() + 5000); // TESTING: 10 seconds from now
     alarm.setHours(hours);
 	alarm.setMinutes(minutes);
     alarm.setSeconds(0);
@@ -117,20 +116,8 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 		await AsyncStorage.removeItem('alarmNotificationId');
 	}
 
-
-	// const id = await AsyncStorage.getItem('alarmNotificationId');
-
-	// if (id) {
-	// 	await Notifications.cancelScheduledNotificationAsync(id);
-	// }
-
 	// await AsyncStorage.removeItem('wakeTime');
-	// await AsyncStorage.removeItem('alarmNotificationId');
-	
-    // clearTimeout(timeoutRef.current);
-
-	await AsyncStorage.removeItem('wakeTime');
-    setAlarmInfo(null);
+    // setAlarmInfo(null);
 	onAlarmChange?.(); // notify parent to refresh wake time display
 	onClose?.();
   };
