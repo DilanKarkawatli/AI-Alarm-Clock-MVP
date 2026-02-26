@@ -27,11 +27,13 @@ export default function WakeReason() {
 			)
 
 			// console.log('Profile saved:', profile);
+			wakereason = profile.wakeReason;	
 			setSavedGoal(profile.wakeReason);
 		} catch (error) {
 			console.error('Error saving profile:', error);
 		}
 	}
+
 
 
 

@@ -46,3 +46,7 @@ app-example
 # generated native folders
 /ios
 # /android
+
+# Generated files
+/temp_audio
+/raw
