@@ -9,11 +9,6 @@ dist/
 web-build/
 expo-env.d.ts
 
-ServiceAccountWiseRise.json
-
-app/(tabs)/x_layout.tsx
-app/explore.tsx
-
 # Native
 .kotlin/
 *.orig.*
@@ -57,3 +52,6 @@ app-example
 /raw
 
 /app/generated/prisma
+
+app/(tabs)/x_layout.tsx
+app/explore.tsx
