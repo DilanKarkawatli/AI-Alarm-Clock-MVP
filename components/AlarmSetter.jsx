@@ -34,7 +34,20 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 
   async function generateAlarmAudio(alarmDate) {
 	const voiceKey = (await AsyncStorage.getItem('selectedVoice')) || 'daniel';
-	const name = 'Dilan';
+
+	// Grabs the name, email & goal data from onBoarding.jsx
+	const onboardingRaw = await AsyncStorage.getItem('user_data');
+	const onboarding = onboardingRaw ? JSON.parse(onboardingRaw) : {};
+
+	// Grabs the goal data from wake-reason.jsx
+	const profileRaw = await AsyncStorage.getItem('userProfile');
+	const profile = profileRaw ? JSON.parse(profileRaw) : {};
+
+	const name = onboarding.name || 'friend';
+	const wakeReason = onboarding.goal || 'No goal provided';
+
+	// const name = 'Dilan';
+
 	const wakeTime = alarmDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
 	const baseUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -46,7 +59,7 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	const response = await fetch(`${baseUrl}/generate-alarm`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ name, wakeTime, voiceKey }),
+		body: JSON.stringify({ name, wakeTime, voiceKey, wakeReason }),
 	});
 
 	const data = await response.json();
@@ -76,8 +89,8 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
   }
 
   const setAlarm = async () => {
-    // if (!time.includes(':')) return;
 
+	// ####### TIME LOGIC #######
 	const hours = date.getHours();
 	const minutes = date.getMinutes();
 
@@ -96,12 +109,8 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
       alarm.setDate(alarm.getDate() + 1);
     }
 
+	// ####### SCHEDULING #######
 	await AsyncStorage.setItem('wakeTime', alarm.toISOString());
-
-	await generateAlarmAudio(alarm);
-
-	console.log('Alarm set for', alarm.toISOString());
-	console.log('Alarm audio URL stored:', await AsyncStorage.getItem("latestAlarmRemoteUrl"));
 
 	// schedule only once, after URI is saved
 	if (Platform.OS === 'android' && AlarmScheduler) {
@@ -110,16 +119,19 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	await scheduleExpoAlarm(alarm);
 	}
 
-	// await AlarmScheduler.scheduleAlarm(alarm.getTime());
-
+	// ####### UI REFRESHES #######
 	const formatted = alarm.toLocaleTimeString([], {
 		hour: '2-digit',
 		minute: '2-digit',
 	})
-
 	setAlarmInfo(formatted)
 	onAlarmChange?.(); // notify parent to refresh wake time display
 	onClose?.();
+
+	// ####### Generate Audio Process #######
+	await generateAlarmAudio(alarm); // Time intensive
+	console.log('Alarm set for', alarm.toISOString());
+	console.log('Alarm audio URL stored:', await AsyncStorage.getItem("latestAlarmRemoteUrl"));
   };
 
   const cancelAlarm = async () => {

@@ -1,6 +1,7 @@
-export function generatePrompt(name, wakeTime) {
+export function generatePrompt(name = 'Friend', wakeTime = '07:00', wakereason = 'No goal provided') {
 	const prompt = [
 		`Write a personalized morning greeting for ${name}.`,
+		`The user has set a wake up time of ${wakeTime} and their reason for waking up is: ${wakereason}.`
 		`Do these:
 		- Start slowly, and tell the user something morning related, like observing something.
 		- Tell word for word the user's goal, so they get a reminder of what's important
@@ -24,6 +25,7 @@ export function generatePrompt(name, wakeTime) {
 
 		User name: ${name}
 		Wake time: ${wakeTime}
+		Wake reason: ${wakereason}
 
 		Message: \n`
 	]
