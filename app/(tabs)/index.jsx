@@ -145,7 +145,11 @@ export default function App() {
 		/>
 	  </Pressable>
 
+<<<<<<< HEAD
 	  <Text style={styles.holdText}> Hold to set time </Text>
+=======
+	  <Text style={styles.holdText}> Long-Press clock to set time </Text>
+>>>>>>> 59daf825947941c4d34ebff014e50dd145f9d68d
 
 	  <Pressable
 	  	style={styles.buttonVoice}
@@ -189,7 +193,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+<<<<<<< HEAD
 		paddingHorizontal: 40,
+=======
+		paddingHorizontal: 20,
+>>>>>>> 59daf825947941c4d34ebff014e50dd145f9d68d
 	},
 	image: {
 		width: 300,
@@ -260,7 +268,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	wakeTimeText: {
+<<<<<<< HEAD
 		fontSize: 80,
+=======
+		fontSize: 120,
+>>>>>>> 59daf825947941c4d34ebff014e50dd145f9d68d
 		fontWeight: 'bold',
 		color: '#8d8d8d',
 		textShadowColor: 'rgba(99, 99, 99, 0.5)',
