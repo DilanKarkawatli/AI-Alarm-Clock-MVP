@@ -9,7 +9,7 @@ export async function generateMessage(prompt) {
 		messages: [
 			{
 				role: "user",
-				content: prompt
+				content: Array.isArray(prompt) ? prompt.join('\n') : prompt
 			}
 		],
 		"max_tokens": 25
