@@ -8,6 +8,7 @@ import { Platform } from 'react-native';
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
 
+// Brand colors
 export const Colors = {
   light: {
     text: '#11181C',
@@ -27,6 +28,7 @@ export const Colors = {
   },
 };
 
+// Brand fonts
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */

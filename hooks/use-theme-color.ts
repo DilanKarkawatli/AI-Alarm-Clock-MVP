@@ -1,4 +1,6 @@
 /**
+ * Hook that returs the correct color for the current theme
+ * 
  * Learn more about light and dark modes:
  * https://docs.expo.dev/guides/color-schemes/
  */

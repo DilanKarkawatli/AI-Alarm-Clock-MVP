@@ -1,6 +1,12 @@
 // Typescript configuration file
 {
-  "compilerOptions": {},
+  "compilerOptions": {
+	"ignoreDeprecations": "6.0",
+	"baseUrl": ".",
+	"paths": {
+		"@/*": ["./*"]
+	}
+  },
   "extends": "expo/tsconfig.base",
   "include": [
     "**/*.ts",
