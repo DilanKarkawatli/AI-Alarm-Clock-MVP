@@ -108,11 +108,11 @@ class AlarmSoundService : Service() {
       PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
-    val stopIntent = Intent(this, AlarmSoundService::class.java).apply {
-      action = ACTION_STOP
+    val stopIntent = Intent(this, AlarmReceiver::class.java).apply {
+      action = AlarmReceiver.ACTION_STOP_ALARM
     }
 
-    val stopPendingIntent = PendingIntent.getService(
+    val stopPendingIntent = PendingIntent.getBroadcast(
       this, 8182, stopIntent,
       PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )

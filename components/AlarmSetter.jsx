@@ -1,19 +1,46 @@
+/**
+ * This component sets the alarm and is the UI screen for setting the alarm
+ */
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Directory, File, Paths } from 'expo-file-system';
 import * as Notifications from 'expo-notifications';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, NativeModules, Platform, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-const { AlarmScheduler } = NativeModules;
-
 import DatePicker from "react-native-date-picker";
+const { AlarmScheduler } = NativeModules;
 
 export default function AlarmSetter({ onAlarmChange, onClose }) {
   const [time, setTime] = useState('');
   const [alarmInfo, setAlarmInfo] = useState(null);
   const [repeatDaily, setRepeatDaily] = useState(false)
-
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
+
+  // A useEffect function is a react hook that runs a function at a specific time
+  useEffect(() => {
+	const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+		console.log("ACTION PRESSED:", response.actionIdentifier);
+
+		if (response.actionIdentifier  === 'stop') {
+			cancelAlarm();
+		}
+	});
+
+	return () => subscription.remove();
+  }, []);
+
+	useEffect(() => {
+		Notifications.setNotificationCategoryAsync('alarm', [
+			{
+				identifier: 'stop',
+				buttonTitle: 'Stop',
+				options: {
+					isDestructive: true,
+				},
+			},
+		]);
+	}, []);
 
   const scheduleExpoAlarm = async (alarmTime) => {
 	const id = await Notifications.scheduleNotificationAsync({
@@ -21,6 +48,7 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 			title: "Wake up",
 			body: "Your wisdom awaits.",
 			sound: true,
+			categoryIdentifier: 'alarm'
 		},
 		trigger: {
 			date: alarmTime,
@@ -142,7 +170,6 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	alarm.setMilliseconds(0);
 
 
-
     // If time already passed today → tomorrow
     if (alarm <= now) {
       alarm.setDate(alarm.getDate() + 1);
@@ -179,6 +206,7 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	if (Platform.OS === 'android' && AlarmScheduler) {
 		await AlarmScheduler.setAlarmSoundUri(null);
 		await AlarmScheduler.cancelAlarm();
+		console.log("Cancel alarm triggered");
 	} else {
 		const id = await AsyncStorage.getItem('alarmNotificationId');
 		if (id) {

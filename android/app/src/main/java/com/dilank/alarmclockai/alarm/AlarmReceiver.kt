@@ -16,6 +16,21 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
 		if (context == null) return
 
+		val action = intent?.action
+
+		Log.d("ALARM_DEBUG", "Received action: $action")
+
+		// Handle stop button
+		if (intent?.action == "STOP_ALARM") {
+			Log.d("ALARM_DEBUG", "Stopping alarm")
+
+			val stopIntent = Intent(context, AlarmSoundService::class.java)
+			context.stopService(stopIntent)
+
+			return
+		}
+
+		// Normal alarm trigger
         Log.d("ALARM_DEBUG", "AlarmReceiver triggered")
 
         // Start alarm sound service
@@ -90,6 +105,7 @@ class AlarmReceiver : BroadcastReceiver() {
 	}
 
 	companion object {
+		const val ACTION_STOP_ALARM = "STOP_ALARM"
 		const val PREFS_NAME = "alarm_preferences"
 		const val KEY_REPEAT_DAILY = "repeat_daily"
 		const val KEY_ALARM_TIME_MILLIS = "alarm_time_millis"
