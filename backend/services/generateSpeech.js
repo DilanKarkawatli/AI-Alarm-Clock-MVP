@@ -9,7 +9,7 @@ const elevenlabs = new ElevenLabsClient({
 export async function generateSpeech(text, voiceKey) {
 	console.log("Generating speech with voiceKey:", voiceKey);
 
-	const voiceID = outputVoiceID(voiceKey || "daniel"); // voiceKey or "daniel"
+	const voiceID = outputVoiceID(voiceKey || "julian"); // voiceKey or "julian"
 
 	const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceID}/stream`, {
 			method: 'POST',

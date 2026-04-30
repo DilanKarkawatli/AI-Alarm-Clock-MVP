@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Directory, File, Paths } from 'expo-file-system';
 import * as Notifications from 'expo-notifications';
 import { useState } from 'react';
-import { Alert, NativeModules, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, NativeModules, Platform, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
 const { AlarmScheduler } = NativeModules;
 
 import DatePicker from "react-native-date-picker";
@@ -10,6 +10,7 @@ import DatePicker from "react-native-date-picker";
 export default function AlarmSetter({ onAlarmChange, onClose }) {
   const [time, setTime] = useState('');
   const [alarmInfo, setAlarmInfo] = useState(null);
+  const [repeatDaily, setRepeatDaily] = useState(false)
 
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
@@ -65,7 +66,7 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
   }
 
   async function generateAlarmAudio(alarmDate) {
-	const voiceKey = (await AsyncStorage.getItem('selectedVoice')) || 'daniel';
+	const voiceKey = (await AsyncStorage.getItem('selectedVoice')) || 'julian';
 
 	// Grabs the name, email & goal data from onBoarding.jsx
 	const onboardingRaw = await AsyncStorage.getItem('user_data');
@@ -140,6 +141,8 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
     alarm.setSeconds(0);
 	alarm.setMilliseconds(0);
 
+
+
     // If time already passed today → tomorrow
     if (alarm <= now) {
       alarm.setDate(alarm.getDate() + 1);
@@ -147,10 +150,12 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 
 	// ####### SCHEDULING #######
 	await AsyncStorage.setItem('wakeTime', alarm.toISOString());
+	await AsyncStorage.setItem('alarmRepeatDaily', repeatDaily.toString());
 
 	// schedule only once, after URI is saved
 	if (Platform.OS === 'android' && AlarmScheduler) {
-	await AlarmScheduler.scheduleAlarm(alarm.getTime());
+	await AlarmScheduler.scheduleAlarm(alarm.getTime(), repeatDaily);
+	console.log('Alarm scheduled on Android with repeat:', repeatDaily);
 	} else {
 	await scheduleExpoAlarm(alarm);
 	}
@@ -182,9 +187,16 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 		await AsyncStorage.removeItem('alarmNotificationId');
 	}
 
-	// await AsyncStorage.removeItem('wakeTime');
-    // setAlarmInfo(null);
-	onAlarmChange?.(); // notify parent to refresh wake time display
+	// Clean up storage on both platforms
+	//await AsyncStorage.removeItem('wakeTime');
+	//await AsyncStorage.removeItem('alarmRepeatDaily');
+
+	// // Reset state
+	// setDate(new Date());
+	// setRepeatDaily(false);
+	// setAlarmInfo(null);
+
+	onAlarmChange?.();
 	onClose?.();
   };
 
@@ -211,6 +223,19 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 				setOpen(false);
 			}}
 		/>
+
+
+	  <View style={styles.repeatContainer}>
+		<Text style={styles.repeatText}>Repeat Daily</Text>
+		<Switch
+			value={repeatDaily}
+			onValueChange={setRepeatDaily}
+			trackColor={{ false: '#555555', true: '#009719' }}
+			thumbColor={repeatDaily ? '#f7f7f7' : '#f4f3f4'}
+			style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
+		/>
+	  </View>
+
       <Pressable style={styles.button} onPress={setAlarm}>
         <Text style={styles.buttonText}>Set Alarm</Text>
       </Pressable>
@@ -237,7 +262,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   button: {
-    backgroundColor: '#757575',
+    backgroundColor: '#c99a00',
     padding: 12,
 	
     borderRadius: 10,
@@ -267,5 +292,24 @@ const styles = StyleSheet.create({
 	width: "100%",
 	alignItems: "center",
 	marginBottom: 15,
+	},
+	// styleSwitch: {
+	// 	width: 20%
+	// },
+	// repeatButton: {
+	// 	textAlign: "left",
+	// 	topMargin: 20,
+	// },
+	repeatContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		width: '100%',
+		marginBottom: 15,
+		paddingHorizontal: 10,
+	},
+	repeatText: {
+		fontSize: 16,
+		fontWeight: '500',
 	},
 });

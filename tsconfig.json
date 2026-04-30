@@ -1,3 +1,4 @@
+// Typescript configuration file
 {
   "compilerOptions": {},
   "extends": "expo/tsconfig.base",

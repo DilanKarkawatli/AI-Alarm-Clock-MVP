@@ -117,18 +117,21 @@ class AlarmSoundService : Service() {
       PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
+ 	Log.d(logTag, "Building notification with action")
+
     return NotificationCompat.Builder(this, CHANNEL_ID)
-      .setSmallIcon(R.mipmap.ic_launcher)
-      .setContentTitle("Wake up")
-      .setContentText("Your alarm is ringing")
-      .setCategory(NotificationCompat.CATEGORY_ALARM)
-      .setPriority(NotificationCompat.PRIORITY_MAX)
-      .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-      .setOngoing(true)
-      .setContentIntent(openPendingIntent)
-      .setFullScreenIntent(openPendingIntent, true)
-      .addAction(0, "Stop", stopPendingIntent)
-      .build()
+	.setSmallIcon(R.mipmap.ic_launcher)
+	.setContentTitle("Wake up")
+	.setContentText("Your alarm is ringing")
+	.setCategory(NotificationCompat.CATEGORY_ALARM)
+	.setPriority(NotificationCompat.PRIORITY_MAX)
+	.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+	// .setOngoing(true)
+	.setContentIntent(openPendingIntent)
+	// .setFullScreenIntent(openPendingIntent, true)
+	// .setStyle(NotificationCompat.MediaStyle().setShowActionsInCompactView(0))
+	.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Stop", stopPendingIntent)
+	.build().also { Log.d(logTag, "Notification built successfully") }
   }
 
   private fun createChannelIfNeeded() {

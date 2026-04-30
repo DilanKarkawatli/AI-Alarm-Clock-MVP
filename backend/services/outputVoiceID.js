@@ -2,11 +2,11 @@
 Based on user input, outputs the correct voice id
 */
 const VOICE_CATALOG = {
-  daniel: { key: "daniel", label: "Wisdom Purveyor", providerVoiceId: "onwK4e9ZLuTAKqWW03F9" },
-  adam: { key: "adam", label: "Socratic Monologue", providerVoiceId: "pNInz6obpgDQGcFmaJgB" },
+  julian: { key: "julian", label: "Wise Friend", providerVoiceId: "7p1Ofvcwsv7UBPoFNcpI" },
+  myrrdin: { key: "myrrdin", label: "Socratic Monologue", providerVoiceId: "oR4uRy4fHDUGGISL0Rev" },
   wyatt: { key: "wyatt", label: "Aurelian Meditations", providerVoiceId: "YXpFCvM1S3JbWEJhoskW" },
-  myrrdin: { key: "myrrdin", label: "Calm Narrator", providerVoiceId: "oR4uRy4fHDUGGISL0Rev" },
-  spuds_oxley: { key: "spuds_oxley", label: "Wise Mother", providerVoiceId: "NOpBlnGInO9m6vDvFkFC" },
+  best_female_friend: { key: "best_female_friend", label: "Calm Narrator", providerVoiceId: "aj0fZfXTBc7E3By4X8L2" },
+  mid30s_female: { key: "mid30s_female", label: "Wise Big Sister", providerVoiceId: "xYa75LlayhWHCRl1yJSH" },
 };
 
 export function listVoices() {
@@ -18,7 +18,7 @@ export function isValidVoiceKey(voiceKey) {
 }
 
 export default function outputVoiceID(voiceKey) {
-  const key = (voiceKey || "daniel").toLowerCase();
+  const key = (voiceKey || "julian").toLowerCase();
   console.log(`Outputting voice ID for key: ${key}`);
-  return VOICE_CATALOG[key]?.providerVoiceId ?? VOICE_CATALOG.daniel.providerVoiceId;
+  return VOICE_CATALOG[key]?.providerVoiceId ?? VOICE_CATALOG.julian.providerVoiceId;
 }
