@@ -1,3 +1,8 @@
+/**
+ * Sets mode to dark/light (gonna add button in the future)
+ * Determines the layout of the app, with the header being disabled
+ */
+
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';

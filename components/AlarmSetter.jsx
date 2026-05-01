@@ -42,24 +42,24 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 		]);
 	}, []);
 
-  const scheduleExpoAlarm = async (alarmTime) => {
-	const id = await Notifications.scheduleNotificationAsync({
-		content: {
-			title: "Wake up",
-			body: "Your wisdom awaits.",
-			sound: true,
-			categoryIdentifier: 'alarm'
-		},
-		trigger: {
-			date: alarmTime,
-			type: Notifications.SchedulableTriggerInputTypes.DATE,
-			channelId: 'default',
-		},
-	});
-	console.log("Scheduled notification:", id);
+//   const scheduleExpoAlarm = async (alarmTime) => {
+// 	const id = await Notifications.scheduleNotificationAsync({
+// 		content: {
+// 			title: "Wake up",
+// 			body: "Your wisdom awaits.",
+// 			sound: true,
+// 			categoryIdentifier: 'alarm'
+// 		},
+// 		trigger: {
+// 			date: alarmTime,
+// 			type: Notifications.SchedulableTriggerInputTypes.DATE,
+// 			channelId: 'default',
+// 		},
+// 	});
+// 	console.log("Scheduled notification:", id);
 
-	await AsyncStorage.setItem('alarmNotificationId', id);
-  }
+// 	await AsyncStorage.setItem('alarmNotificationId', id);
+//   }
 
   const ensureAlarmPermissions = async () => {
 	if (Platform.OS === 'android') return true; // Handled by native module
@@ -137,6 +137,7 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	const alarmsDir = new Directory(Paths.document, 'alarms');
 	alarmsDir.create({ intermediates: true, idempotent: true });
 	const targetFile = new File(alarmsDir, 'latest-alarm.mp3');
+
 	if (!data.file_key) throw new Error("Missing file_key from backend");
 	const downloadedFile = await File.downloadFileAsync(signedData.download_url, targetFile, { idempotent: true });
 
@@ -181,10 +182,12 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 
 	// schedule only once, after URI is saved
 	if (Platform.OS === 'android' && AlarmScheduler) {
-	await AlarmScheduler.scheduleAlarm(alarm.getTime(), repeatDaily);
-	console.log('Alarm scheduled on Android with repeat:', repeatDaily);
+		console.log("CALLING NATIVE SCHEDULER");
+		await AlarmScheduler.scheduleAlarm(alarm.getTime(), repeatDaily);
+		console.log('Alarm scheduled on Android with repeat:', repeatDaily);
 	} else {
-	await scheduleExpoAlarm(alarm);
+		console.log("AlarmScheduler:", AlarmScheduler);
+		console.log('Check when no alarm is scheduled');
 	}
 
 	// ####### UI REFRESHES #######
@@ -196,11 +199,13 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	onAlarmChange?.(); // notify parent to refresh wake time display
 	onClose?.();
 
-	// ####### Generate Audio Process #######
-	await generateAlarmAudio(alarm); // Time intensive
 	console.log('Alarm set for', alarm.toISOString());
 	console.log('Alarm audio URL stored:', await AsyncStorage.getItem("latestAlarmRemoteUrl"));
+
+	// ####### Generate Audio Process #######
+  	await generateAlarmAudio(alarm); // Time intensive
   };
+
 
   const cancelAlarm = async () => {
 	if (Platform.OS === 'android' && AlarmScheduler) {

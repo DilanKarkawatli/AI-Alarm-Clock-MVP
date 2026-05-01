@@ -1,29 +1,23 @@
-import { useRouter } from 'expo-router';
-import { Image, Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import AlarmSetter from '../../components/AlarmSetter';
+/*
+ * Main page to handle alarm scheduling via communication with native code through "AlarmSetter.jsx"
+ */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
-
-import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
+import { createAudioPlayer } from 'expo-audio';
 import * as Notifications from 'expo-notifications';
-import { voices } from '../../data/voices';
-
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import AlarmSetter from '../../components/AlarmSetter';
 import Onboarding from '../../components/Onboarding';
-
-Notifications.setNotificationHandler({
-	handleNotification: async () => ({
-		shouldShowList: true,
-		shouldShowBanner: true,
-		shouldPlaySound: true,
-		shouldSetBadge: false,
-	}),
-})
+import { voices } from '../../data/voices';
 
 export default function App() {
 	const [wakeTime, setWakeTime] = useState(null);
 	const router = useRouter();
 	const [timerVisible, setTimerVisible] = useState(false);
+
+	// #### ONBOARDING ####
 
 	const [showOnboarding, setShowOnboarding] = useState(false);
 	const [checkingOnboarding, setCheckingOnboarding] = useState(true);
@@ -52,6 +46,7 @@ export default function App() {
 		}
 	};
 
+
 	const loadWakeTime = async () => {
 		const saved = await AsyncStorage.getItem('wakeTime');
 
@@ -76,18 +71,6 @@ export default function App() {
 	}, []);
 
 	useEffect(() => {
-		if (Platform.OS === 'android') {
-			Notifications.setNotificationChannelAsync('default', {
-				name: 'Alarm',
-				importance: Notifications.AndroidImportance.HIGH,
-				sound: 'default',
-			});
-		}
-
-	Notifications.requestPermissionsAsync();
-  	}, []);
-
-	useEffect(() => {
 		const sub = Notifications.addNotificationReceivedListener(() => {
 			console.log("NOTIFICATION RECEIVED");
 			playSelectedVoice();      // start alarm sound immediately
@@ -95,13 +78,6 @@ export default function App() {
 		});
 
 		return () => sub.remove();
-	}, []);
-
-	useEffect(() => {
-		setAudioModeAsync({
-			playsInSilentMode: true,
-			shouldDuck: false,
-		});
 	}, []);
 
 	const playSelectedVoice = async () => {
@@ -167,7 +143,6 @@ export default function App() {
 		animationType="fade"
 		transparent={true}
 		presentationStyle="overFullScreen"
-		// onRequestClose={() => setTimerVisible(false)}
 	  >
 		<View style={styles.modalOverlay}>
 			<View style={styles.modalContent}>

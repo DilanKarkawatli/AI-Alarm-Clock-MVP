@@ -1,3 +1,7 @@
+/**
+ * Screen to choose different voices
+ */
+
 import { useFocusEffect } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -8,7 +12,7 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function ChooseVoice() {
+export default function chooseVoice() {
 	const [selectedVoice, setSelectedVoice] = useState(null);
 	const soundRef = useRef(null);
 
@@ -29,7 +33,7 @@ export default function ChooseVoice() {
 	};
 
 	const renderVoiceItem = ({ item }) => {
-		const isSelected = selectedVoice === item.id;
+		const isSelected = selectedVoice === item.id; // isSelected = (voice == item.id) => isSelected = True/False
 		
 		return (
 			<Pressable
@@ -96,7 +100,6 @@ export default function ChooseVoice() {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.titleText}>Choose your ally wisely</Text>
-
 			<FlatList
 				data={voices}
 				keyExtractor={(item) => item.id}

@@ -1,3 +1,7 @@
+/*
+	Alarm receiver that grabs contexts and sends off intents (instructions) back
+ */
+
 package com.dilank.alarmclockai.alarm
 
 import android.app.AlarmManager
@@ -10,18 +14,27 @@ import android.util.Log
 import com.dilank.alarmclockai.MainActivity
 import java.util.Calendar
 
+// AlarmReceiver is the listener that Android wakes up when the alarm fires
 class AlarmReceiver : BroadcastReceiver() {
-	private val logTag = "AlarmReceiver"
+	private val logTag = "AlarmReceiver" // Used in logs as a str
 
+	// onReceive is called by Android when alarm is triggered
     override fun onReceive(context: Context, intent: Intent?) {
+		Log.d("ALARM_DEBUG", "ALARM FIRED SUCCESSFULLY")
+		/*
+			onReceive
+			  - context: Android gives this, as access to change things
+			  - intent: A message describing something to be done (ex. run this function)
+		 */
+		 
+		// Check if android gave any context
 		if (context == null) return
 
+		// Extract action string from intent, ex. "STOP_ALARM"
 		val action = intent?.action
 
-		Log.d("ALARM_DEBUG", "Received action: $action")
-
 		// Handle stop button
-		if (intent?.action == "STOP_ALARM") {
+		if (action == "STOP_ALARM") {
 			Log.d("ALARM_DEBUG", "Stopping alarm")
 
 			val stopIntent = Intent(context, AlarmSoundService::class.java)
@@ -30,12 +43,11 @@ class AlarmReceiver : BroadcastReceiver() {
 			return
 		}
 
-		// Normal alarm trigger
-        Log.d("ALARM_DEBUG", "AlarmReceiver triggered")
-
         // Start alarm sound service
         val serviceIntent = Intent(context, AlarmSoundService::class.java)
 
+		// Rules got stricter post android 8.0 to start services, to reduce crashing
+		// Starts the alarm using serviceIntent
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(serviceIntent)
         } else {
@@ -58,10 +70,11 @@ class AlarmReceiver : BroadcastReceiver() {
 		val repeatDaily = prefs.getBoolean(KEY_REPEAT_DAILY, false)
 
 		if (repeatDaily) {
-		rescheduleAlarmForNextDay(context, prefs)
+			rescheduleAlarmForNextDay(context, prefs)
 		}
     }
 
+	// Used to reschedule alarm for next day
 	private fun rescheduleAlarmForNextDay(
 		context: Context,
 		prefs: android.content.SharedPreferences

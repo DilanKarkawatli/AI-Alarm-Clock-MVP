@@ -1,3 +1,7 @@
+/*
+ * Handles screen for changing the wake reason in the app
+ */
+
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { profileTemplate } from '../../data/profileTemplate';
@@ -90,8 +94,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingHorizontal: 30,
 		paddingTop: 80,
-		// justifyContent: 'center',
-		// alignItems: 'center',
 	},
 	titleText: {
 		fontSize: 24,
