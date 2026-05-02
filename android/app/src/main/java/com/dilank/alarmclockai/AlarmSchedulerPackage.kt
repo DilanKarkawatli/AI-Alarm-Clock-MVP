@@ -1,3 +1,8 @@
+/*
+	Returns custom package AlarmSchedulerPackage into MainApplication.kt
+	to enable Alarm Scheduling inside Android using NativeModules from react.
+ */
+
 package com.dilank.alarmclockai
 
 import com.facebook.react.ReactPackage

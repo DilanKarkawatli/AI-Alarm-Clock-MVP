@@ -1,3 +1,9 @@
+/*
+	MainActivity.kt is the entrypoint of the android app.
+	It wires together the main app, an expo wrapper for the app and 
+	functionality of the back button in the app.
+ */
+
 package com.dilank.alarmclockai
 import expo.modules.splashscreen.SplashScreenManager
 
@@ -12,11 +18,12 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 import expo.modules.ReactActivityDelegateWrapper
 
 class MainActivity : ReactActivity() {
+	/*
+		MainActivity: Uses a pre-built core class 'ReactActivity' from React Native (see import)
+					  that bridges the gap between the Android Native code and the React Native app.
+	 */
   override fun onCreate(savedInstanceState: Bundle?) {
-    // Set the theme to AppTheme BEFORE onCreate to support
-    // coloring the background, status bar, and navigation bar.
-    // This is required for expo-splash-screen.
-    // setTheme(R.style.AppTheme);
+    // Setup for expo-splash-screen.
     // @generated begin expo-splashscreen - expo prebuild (DO NOT MODIFY) sync-f3ff59a738c56c9a6119210cb55f0b613eb8b6af
     SplashScreenManager.registerOnActivity(this)
     // @generated end expo-splashscreen
@@ -29,9 +36,13 @@ class MainActivity : ReactActivity() {
    */
   override fun getMainComponentName(): String = "main"
 
-  /**
-   * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
-   * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
+  /*
+	Returns the instance of the 'ReactActivityDelegate' that is an import from 
+	the expo library (see imports). We use 'DefaultReactActivityDelegate' 
+	which allows you to enable New Architecture with a single boolean flags 'fabricEnabled'.
+
+	Function basically creates & returns an instance of 'ReactActivityDelegateWrapper'
+	which basically uses the normal React Native setup with the expo wrapper.
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate {
     return ReactActivityDelegateWrapper(
@@ -59,7 +70,7 @@ class MainActivity : ReactActivity() {
       }
 
       // Use the default back button implementation on Android S
-      // because it's doing more than [Activity.moveTaskToBack] in fact.
+      // because it's doing more than 'Activity.moveTaskToBack' in fact.
       super.invokeDefaultOnBackPressed()
   }
 }

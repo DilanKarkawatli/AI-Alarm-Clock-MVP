@@ -1,3 +1,7 @@
+/*
+	An administrative file, handles how the app is initialized on Android.
+ */
+
 package com.dilank.alarmclockai
 
 import com.dilank.alarmclockai.AlarmSchedulerPackage
@@ -19,6 +23,13 @@ import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
 
 class MainApplication : Application(), ReactApplication {
+	/*
+		reactNativeHost: Defines a host for the React Native application.
+						 It also adds a custom package 'AlarmSchedulerPackage'
+						 
+		onCreate: Creates an instance of the app before any screen is loaded
+
+	 */
 
 	override val reactNativeHost: ReactNativeHost = ReactNativeHostWrapper(
 		this,
@@ -46,7 +57,7 @@ class MainApplication : Application(), ReactApplication {
     } catch (e: IllegalArgumentException) {
       ReleaseLevel.STABLE
     }
-    loadReactNative(this)
+    loadReactNative(this) // this == Class MainApplication
     ApplicationLifecycleDispatcher.onApplicationCreate(this)
   }
 

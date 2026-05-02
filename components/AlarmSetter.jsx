@@ -205,8 +205,7 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	// ####### Generate Audio Process #######
   	await generateAlarmAudio(alarm); // Time intensive
   };
-
-
+9
   const cancelAlarm = async () => {
 	if (Platform.OS === 'android' && AlarmScheduler) {
 		await AlarmScheduler.setAlarmSoundUri(null);
