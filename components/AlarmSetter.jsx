@@ -1,5 +1,5 @@
 /**
- * This component sets the alarm and is the UI screen for setting the alarm
+ * This component sets the alarm and creates the UI screen for setting the alarm
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,7 +30,7 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	return () => subscription.remove();
   }, []);
 
-	useEffect(() => {
+   useEffect(() => {
 		Notifications.setNotificationCategoryAsync('alarm', [
 			{
 				identifier: 'stop',
@@ -41,25 +41,6 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 			},
 		]);
 	}, []);
-
-//   const scheduleExpoAlarm = async (alarmTime) => {
-// 	const id = await Notifications.scheduleNotificationAsync({
-// 		content: {
-// 			title: "Wake up",
-// 			body: "Your wisdom awaits.",
-// 			sound: true,
-// 			categoryIdentifier: 'alarm'
-// 		},
-// 		trigger: {
-// 			date: alarmTime,
-// 			type: Notifications.SchedulableTriggerInputTypes.DATE,
-// 			channelId: 'default',
-// 		},
-// 	});
-// 	console.log("Scheduled notification:", id);
-
-// 	await AsyncStorage.setItem('alarmNotificationId', id);
-//   }
 
   const ensureAlarmPermissions = async () => {
 	if (Platform.OS === 'android') return true; // Handled by native module
@@ -106,10 +87,6 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 
 	const name = onboarding.name || 'friend';
 	const wakeReason = onboarding.goal || 'No goal provided';
-
-	console.log("Wake Reason: ", wakeReason);
-
-	// const name = 'Dilan';
 
 	const wakeTime = alarmDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -202,7 +179,7 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	console.log('Alarm set for', alarm.toISOString());
 	console.log('Alarm audio URL stored:', await AsyncStorage.getItem("latestAlarmRemoteUrl"));
 
-	// ####### Generate Audio Process #######
+	// ####### Generate Audio #######
   	await generateAlarmAudio(alarm); // Time intensive
   };
 9
@@ -218,15 +195,6 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 		}
 		await AsyncStorage.removeItem('alarmNotificationId');
 	}
-
-	// Clean up storage on both platforms
-	//await AsyncStorage.removeItem('wakeTime');
-	//await AsyncStorage.removeItem('alarmRepeatDaily');
-
-	// // Reset state
-	// setDate(new Date());
-	// setRepeatDaily(false);
-	// setAlarmInfo(null);
 
 	onAlarmChange?.();
 	onClose?.();
@@ -255,8 +223,6 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 				setOpen(false);
 			}}
 		/>
-
-
 	  <View style={styles.repeatContainer}>
 		<Text style={styles.repeatText}>Repeat Daily</Text>
 		<Switch
