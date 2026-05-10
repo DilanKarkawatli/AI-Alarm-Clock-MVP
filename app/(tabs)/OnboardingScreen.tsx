@@ -1,4 +1,5 @@
-import React from 'react';
+// import { useFonts } from 'expo-font';
+import React, { useRef } from 'react';
 import {
 	Image,
 	StyleSheet,
@@ -7,6 +8,17 @@ import {
 	View,
 } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
+import GoalBox from '../../components/onboarding/GoalBox';
+import NameBox from '../../components/onboarding/NameBox';
+
+// const [fontsLoaded] = useFonts({
+//     Poppins: require('./assets/fonts/Poppins-Regular.ttf'),
+//     'Poppins-Bold': require('./assets/fonts/Poppins-Bold.ttf'),
+//   });
+
+// if (!fontsLoaded) {
+// 	return null;
+// }
 
 // type == custom typescript datastructure blueprint
 type User = {
@@ -19,7 +31,7 @@ type User = {
 // Custom skip button
 const Skip = ({ ...props }) => (
 	<TouchableOpacity style={styles.skipButton} {...props}>
-		<Text style={styles.buttonText}>Skip</Text>
+		<Text style={styles.skipText}>Skip</Text>
 	</TouchableOpacity>
 );
 
@@ -32,70 +44,104 @@ const Begin = ({ ...props }) => (
 
 // "{ onDone }: User" tells onDone what typescript type it is
 export default function OnboardingScreen({ onDone }: User) {
+  const onboardingRef = useRef(null);
   return (
 	<View style={styles.container}>
 	  <Onboarding
-	  		// showSkip
-			// SkipButtonComponent={Skip}
+	  		// ### CUSTOMIZATION ###
+	  		showSkip
+			SkipButtonComponent={Skip}
 			// DoneButtonComponent={Begin}
+			// bottomBarHeight={0}
+			bottomBarColor="#fff"
+			showPagination={true}
+			showNext={false}
+			imageContainerStyles={{
+				paddingBottom: 40,
+			}}
+			containerStyles={{
+				paddingHorizontal: 24,
+			}}
+			titleStyles={{
+				fontSize: 32,
+				fontWeight: '700',
+				color: '#111',
+			}}
+			subTitleStyles={{
+				fontSize: 18,
+				color: '#666',
+			}}
 	  		onSkip={() =>
 					onDone({
 						name: 'Ryan',
 						goal: 'Wake up earlier',
 					})
 			}
-			// onNext={() =>
-			// 		onNext({
-			// 		  name: 'Ryan',
-			// 		  goal: 'Wake up earlier',
-			// 		  })
-			// 		}
+			ref={onboardingRef}
 			pages={[
 				{
-				backgroundColor: '#ffffff',
-				title: 'The way you wake up shapes your entire day',
-				subtitle: (''
-					// <View style={styles.buttonContainer}>
-					// 	<TouchableOpacity style={styles.beginButton}>
-					// 	<Text style={styles.buttonText}>Begin</Text>
-					// 	</TouchableOpacity>
+					backgroundColor: '#ffffff',
 
-					// 	<TouchableOpacity style={styles.skipButton}>
-					// 	<Text style={styles.buttonText}>Skip</Text>
-					// 	</TouchableOpacity>
-					// </View>
-				),
-				image: <Image style={styles.img} source={require('../../assets/images/icon.png')} />,
+					title: '', //'The way you wake up shapes your entire day'
+					
+					subtitle: '',
+
+					image: (
+						<View style={styles.customPage}>
+							<Text style={styles.title}>
+								The way you wake up shapes your entire day
+							</Text>
+{/* 
+							<Image
+								style={styles.img3}
+								source={require('../../assets/images/icon.png')}
+							/> */}
+
+							<TouchableOpacity 
+								style={styles.beginButton}
+								onPress={() => onboardingRef.current.goNext()}
+							>
+								<Text style={styles.beginText}>Begin</Text>
+							</TouchableOpacity>
+						</View>
+					),
 				},
 				{
-				backgroundColor: '#ffffff',
-				image: <Image style={styles.img2} source={require('../../assets/images/img_slide2.png')} />,
-				title: 'This is where your wake-up alarm begins.',
-				subtitle: '',
+					backgroundColor: '#ffffff',
+
+					image: <NameBox 
+						onNext={() => onboardingRef.current.goNext()}
+					/>,
+
+					title: 'This is where your wake-up alarm begins.',
+
+					subtitle: '',
 				},
 				{
-				backgroundColor: '#ffffff',
-				image: <Image style={styles.img} source={require('../../assets/images/img_slide3.png')} />,
-				title: 'What do you need to hear every morning?',
-				subtitle: '',
+					backgroundColor: '#ffffff',
+					image: <GoalBox 
+						onNext={() => onboardingRef.current.goNext()}
+					/>,
+					title: 'What do you need to hear every morning?',
+					subtitle: '',
 				},
 				{
-				backgroundColor: '#ffffff',
-				image: <Image style={styles.img} source={require('../../assets/images/icon.png')} />,
-				title: 'Choose the voice that wakes you.',
-				subtitle: '',
+					backgroundColor: '#ffffff',
+					image: <Image style={styles.img} source={require('../../assets/images/icon.png')} />,
+					title: 'Choose the voice that wakes you.',
+					subtitle: '',
 				},
 				{
-				backgroundColor: '#ffffff',
-				image: <Image style={styles.img} source={require('../../assets/images/icon.png')} />,
-				title: 'When does your day begin?',
-				subtitle: '',
+					backgroundColor: '#ffffff',
+					image: <Image style={styles.img} source={require('../../assets/images/icon.png')} />,
+					title: 'When does your day begin?',
+					subtitle: '',
 				},
 				{
-				backgroundColor: '#ffffff',
-				image: <Image style={styles.img} source={require('../../assets/images/icon.png')} />,
-				title: 'Your mornings will sound like this.',
-				subtitle: '',
+					backgroundColor: '#ffffff',
+					image: <Image style={styles.img} source={require('../../assets/images/icon.png')} />,
+					title: 'Your mornings will sound like this.',
+					subtitle: '',
 				},
 			]}
 		/> 
@@ -111,6 +157,7 @@ const styles = StyleSheet.create({
 		width: '80%',
 		height: 300,
 		resizeMode: 'contain',
+		marginBottom: 30
 	},
 	img2: {
 		width: '80%',
@@ -128,15 +175,45 @@ const styles = StyleSheet.create({
   		fontWeight: '700',
 	},
 	skipButton: {
-		backgroundColor: '#91908f',
+		backgroundColor: '#6b6b6b',
 		paddingVertical: 12,
-		paddingHorizontal: 65,
+		paddingHorizontal: 40,
+		marginLeft: 10,
 		borderRadius: 12,
+	},
+	skipText: {
+		color: '#ffffff',
+  		fontWeight: '700',
 	},
 	beginButton: {
 		backgroundColor: '#ff7214',
 		paddingVertical: 12,
 		paddingHorizontal: 60,
 		borderRadius: 12,
+	},
+	customPage: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingHorizontal: 24,
+	},
+
+	title: {
+		fontSize: 30,
+		fontWeight: '700',
+		textAlign: 'center',
+		marginBottom: 40,
+		color: '#111',
+	},
+
+	img3: {
+		width: 200,
+		height: 300,
+		resizeMode: 'contain',
+		marginBottom: 30,
+	},
+
+	beginText: {
+		color: '#fff',
+  		fontWeight: '700',
 	}
 })
