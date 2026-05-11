@@ -1,3 +1,10 @@
+/**
+ * TO BE IMPLEMENTED:
+ * A preview screen that shows how the alarm will sound like.
+ * When you swipe right, you immediately get the notification, 
+ * or something loading, or a cool animation as a lead up to hide process time
+ */
+
 import {
 	StyleSheet,
 	Text,
@@ -10,7 +17,7 @@ type Props = {
 	onNext: () => void;
 };
 
-export default function NameBox( { onNext }: Props) {
+export default function NotificationComponent( { onNext }: Props) {
 	return (
 		<View style={styles.container}>
 			<TextInput style={styles.textInput}

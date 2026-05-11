@@ -1,15 +1,17 @@
 // import { useFonts } from 'expo-font';
 import React, { useRef } from 'react';
 import {
-	Image,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
-	View,
+	View
 } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
 import GoalBox from '../../components/onboarding/GoalBox';
 import NameBox from '../../components/onboarding/NameBox';
+import NotificationComponent from '../../components/onboarding/NotificationComponent';
+import ScrollVoice from '../../components/onboarding/ScrollVoice';
+import TimeSet from '../../components/onboarding/TimeSet';
 
 // const [fontsLoaded] = useFonts({
 //     Poppins: require('./assets/fonts/Poppins-Regular.ttf'),
@@ -91,7 +93,8 @@ export default function OnboardingScreen({ onDone }: User) {
 							<Text style={styles.title}>
 								The way you wake up shapes your entire day
 							</Text>
-{/* 
+
+							{/* 
 							<Image
 								style={styles.img3}
 								source={require('../../assets/images/icon.png')}
@@ -107,40 +110,85 @@ export default function OnboardingScreen({ onDone }: User) {
 					),
 				},
 				{
-					backgroundColor: '#ffffff',
+					backgroundColor: '#F2F2F2',
+					image: (
+						<View>
+							<Text style={styles.title}>
+								This is where your wake-up alarm begins
+							</Text>
 
-					image: <NameBox 
-						onNext={() => onboardingRef.current.goNext()}
-					/>,
+							<NameBox 
+								onNext={() => onboardingRef.current.goNext()}
+							/>
+						</View>
+					),
+					title: '',
+					subtitle: '',
+				},
+				{
+					backgroundColor: '#F2F2F2',
+					image: (
+						<View>
+							<Text style={styles.title}>
+								What do you need to hear every morning?
+							</Text>
 
-					title: 'This is where your wake-up alarm begins.',
+							<GoalBox 
+								onNext={() => onboardingRef.current.goNext()}
+							/>
+						</View>
+					),
+					title: '',
+					subtitle: '',
+				},
+				{
+					backgroundColor: '#F2F2F2',
+					image: (
+						<View>
+							<Text style={styles.title}>
+								Choose the voice that wakes you
+							</Text>
 
+							<ScrollVoice
+								onNext={() => onboardingRef.current.goNext()}
+							/>
+						</View>
+					),
+					title: '',
 					subtitle: '',
 				},
 				{
 					backgroundColor: '#ffffff',
-					image: <GoalBox 
-						onNext={() => onboardingRef.current.goNext()}
-					/>,
-					title: 'What do you need to hear every morning?',
+					image: (
+						<View>
+							<Text style={styles.title}>
+								When does your day begin?
+							</Text>
+
+							<TimeSet
+								onNext={() => onboardingRef.current.goNext()}
+							/>
+						</View>
+					),
+					title: '',
 					subtitle: '',
 				},
 				{
 					backgroundColor: '#ffffff',
-					image: <Image style={styles.img} source={require('../../assets/images/icon.png')} />,
-					title: 'Choose the voice that wakes you.',
-					subtitle: '',
-				},
-				{
-					backgroundColor: '#ffffff',
-					image: <Image style={styles.img} source={require('../../assets/images/icon.png')} />,
-					title: 'When does your day begin?',
-					subtitle: '',
-				},
-				{
-					backgroundColor: '#ffffff',
-					image: <Image style={styles.img} source={require('../../assets/images/icon.png')} />,
-					title: 'Your mornings will sound like this.',
+					image: (
+						<View>
+							<Text style={styles.title}>
+								Your mornings will sound like this:
+							</Text>
+
+							{/* #### TO BE IMPLEMENTED #### */}
+
+							<NotificationComponent
+								onNext={() => onboardingRef.current.goNext()}
+							/>
+						</View>
+					),
+					title: '',
 					subtitle: '',
 				},
 			]}
@@ -201,6 +249,7 @@ const styles = StyleSheet.create({
 		fontSize: 30,
 		fontWeight: '700',
 		textAlign: 'center',
+		paddingTop: 140,
 		marginBottom: 40,
 		color: '#111',
 	},
@@ -215,5 +264,13 @@ const styles = StyleSheet.create({
 	beginText: {
 		color: '#fff',
   		fontWeight: '700',
+	},
+
+	container_namebox: {
+		backgroundColor: '#ffe7cc',
+		padding: 24,
+		borderRadius: 24,
+		width: '90%',
+		alignSelf: 'center',
 	}
 })
