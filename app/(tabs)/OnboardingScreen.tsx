@@ -1,4 +1,5 @@
 // import { useFonts } from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useRef } from 'react';
 import {
 	StyleSheet,
@@ -52,6 +53,7 @@ export default function OnboardingScreen({ onDone }: User) {
 	  <Onboarding
 	  		// ### CUSTOMIZATION ###
 	  		showSkip
+			showDone
 			SkipButtonComponent={Skip}
 			// DoneButtonComponent={Begin}
 			// bottomBarHeight={0}
@@ -78,6 +80,12 @@ export default function OnboardingScreen({ onDone }: User) {
 						name: 'Ryan',
 						goal: 'Wake up earlier',
 					})
+			}
+			onDone={() =>
+				onDone({
+					name: 'Ryan',
+					goal: 'Wake up earlier',
+				})
 			}
 			ref={onboardingRef}
 			pages={[
@@ -184,7 +192,17 @@ export default function OnboardingScreen({ onDone }: User) {
 							{/* #### TO BE IMPLEMENTED #### */}
 
 							<NotificationComponent
-								onNext={() => onboardingRef.current.goNext()}
+								onDone={async () => {
+									const name = await AsyncStorage.getItem('name');
+        							const goal = await AsyncStorage.getItem('goal');
+									// [] Make name & goal not null, i.e. store the values from onboarding, easy
+									console.log(name)
+									console.log(goal)
+									onDone({
+										name: name || '', // await AsyncStorage.getItem(name),
+										goal: goal || '',
+									})
+								}}
 							/>
 						</View>
 					),

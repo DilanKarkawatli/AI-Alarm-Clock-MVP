@@ -1,7 +1,3 @@
-/**
- * Component to choose different voices for onboarding
- */
-
 import { useFocusEffect } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -35,6 +31,18 @@ export default function ScrollVoice({ onNext }: Props) {
 			console.error('Error playing sound:', error);
 		}
 	};
+
+	const stopSound = async () => {
+		if (soundRef.current) {
+			try {
+				soundRef.current.pause();
+				soundRef.current.remove();
+				soundRef.current = null;
+			} catch (error) {
+				console.error("Error stopping sound:", error);
+			}
+		}
+	}; 
 
 	const renderVoiceItem = ({ item }) => {
 		const isSelected = selectedVoice === item.id; // isSelected = (voice == item.id) => isSelected = True/False
@@ -113,7 +121,10 @@ export default function ScrollVoice({ onNext }: Props) {
 			/>
 			<TouchableOpacity 
 				style={styles.button}
-				onPress={onNext}
+				onPress={() => {
+					onNext();
+					stopSound();
+					}}
 				>
 				<Text style={styles.buttonContinue}>
 					Continue

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -10,16 +11,30 @@ type Props = {
 	onNext: () => void;
 };
 
-export default function NameBox( { onNext }: Props) {
+export default function NameBox( { onSubmit, onNext }: Props) {
+	const [name, setName] = useState("");
+
+	const handleSubmit = async () => {
+		console.log(name);
+		await onSubmit?.({ name });
+	};
+
 	return (
 		<View style={styles.container}>
-			<TextInput style={styles.textInput}
+			
+			<TextInput 
+				style={styles.textInput}
 				placeholder="Enter your name"
+				value={name}
+				onChangeText={setName}
 			/>
 
 			<TouchableOpacity 
 				style={styles.button}
-				onPress={onNext}
+				onPress={() => {
+					onNext();
+					handleSubmit();
+					}}
 				>
 				<Text style={styles.buttonContinue}>
 					Continue

@@ -77,6 +77,9 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
   async function generateAlarmAudio(alarmDate) {
 	const voiceKey = (await AsyncStorage.getItem('selectedVoice')) || 'julian';
 
+
+	// [] Fix: Funnel data from new onboarding
+
 	// Grabs the name, email & goal data from onBoarding.jsx
 	const onboardingRaw = await AsyncStorage.getItem('user_data');
 	const onboarding = onboardingRaw ? JSON.parse(onboardingRaw) : {};
@@ -84,6 +87,9 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	// Grabs the goal data from wake-reason.jsx
 	const profileRaw = await AsyncStorage.getItem('userProfile');
 	const profile = profileRaw ? JSON.parse(profileRaw) : {};
+
+
+
 
 	const name = onboarding.name || 'friend';
 	const wakeReason = onboarding.goal || 'No goal provided';

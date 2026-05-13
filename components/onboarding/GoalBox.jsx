@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
 	StyleSheet,
 	Text,
@@ -10,17 +11,29 @@ type Props = {
 	onNext: () => void;
 };
 
-export default function GoalBox( { onNext }: Props) {
+export default function GoalBox( { onSubmit, onNext }: Props) {
+	const [goal, setGoal] = useState("");
+
+	const handleSubmit = async () => {
+		console.log(goal);
+		await onSubmit?.({ goal });
+	};
+
 	return (
 		<View style={styles.container}>
 
 			<TextInput style={styles.textInput}
 				placeholder="Ex. Wake up early"
+				value={goal}
+				onChangeText={setGoal}
 			/>
 
 			<TouchableOpacity 
 				style={styles.button}
-				onPress={onNext}>
+				onPress={() => {
+					onNext();
+					handleSubmit();
+					}}>
 
 				<Text style={styles.buttonContinue}>
 					Continue
