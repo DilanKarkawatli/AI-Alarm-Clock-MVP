@@ -6,13 +6,40 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 // import Onboarding from '../../components/Onboarding';
+// import { generateAlarmAudio, setAlarm } from '../../service/AlarmService';
 import MainApp from './MainApp';
 import OnboardingScreen from './OnboardingScreen';
+
 
 export default function App() {
 	// #### ONBOARDING: Controls which screen is shown ####
 	const [showOnboarding, setShowOnboarding] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const [wakeTime, setWakeTime] = useState(null);
+	const [timerVisible, setTimerVisible] = useState(false);
+
+	const loadWakeTime = async () => {
+		const wakeTime = await AsyncStorage.getItem('wakeTime');
+
+		if (wakeTime) {
+			const date = new Date(wakeTime)
+
+			const formatted = date.toLocaleTimeString([], {
+						hour: '2-digit',
+						minute: '2-digit',
+						hour12: false,
+			})
+
+			setWakeTime(formatted);
+
+			} else {
+				setWakeTime(null);
+			}
+		};
+
+	useEffect(() => {
+		loadWakeTime();
+	}, []);
 
 	// useEffect() runs when screen first loads
 	useEffect(() => {
@@ -35,13 +62,34 @@ export default function App() {
 		}
 	}
 
-	const handleOnboardingSubmit = async ({ name, email, goal }) =>  {
-		// await AsyncStorage.setItem('user_data', 'true');
-		await AsyncStorage.setItem('user_data', JSON.stringify({ name, email, goal }));
+	const handleOnboardingSubmit = async ({ name, goal, wakeTime }) => {
+		try {
+			console.log("SUBMIT DATA:", JSON.stringify({ name, goal, wakeTime }));
 
-		// Hide onboarding
-		setShowOnboarding(false);
-	}
+
+			await AsyncStorage.setItem(
+				'user_data',
+				JSON.stringify({ name, goal, wakeTime })
+			);
+
+			console.log("USER DATA SAVED");
+
+			// const wakeTimeDate = new Date(wakeTime)
+
+			// // #### [] SET TIME (REPLACE ALARMSETTER)
+			// generateAlarmAudio();
+			// setAlarm(wakeTimeDate);
+			// // cancelAlarm();
+
+
+			setShowOnboarding(false);
+
+			console.log("SHOW ONBOARDING SET FALSE");
+
+		} catch (e) {
+			console.error("HANDLE SUBMIT ERROR:", e);
+		}
+	};
 
 	const resetOnboarding = async () => {
 		try {
@@ -69,7 +117,14 @@ export default function App() {
 
   return showOnboarding ? (
 	<OnboardingScreen onDone={handleOnboardingSubmit} /> // onDone waits until OnboardingScreen is done, then uses 'handleOnboardingSubmit'
-  ) : (
+) : (
+	// <>
+	// <AlarmSetterFunctionality
+	// 	onAlarmChange={loadWakeTime}
+	// 	onClose={() => setTimerVisible(false)}
+	// />
+	// <MainApp />
+	// </>
 	<MainApp />
   )
 }

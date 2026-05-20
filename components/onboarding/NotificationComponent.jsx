@@ -53,7 +53,7 @@ export default function NotificationComponent( { onDone }: Props) {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>
-				Wait for it....
+				Wait for it...
 			</Text>
 
 			<TouchableOpacity 
@@ -63,7 +63,7 @@ export default function NotificationComponent( { onDone }: Props) {
 				>
 				<Text style={styles.buttonContinue}
 				>
-					Or don't...
+					Continue using the app!
 				</Text>
 			</TouchableOpacity>
 		</View>
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#ff7214',
     paddingVertical: 14,
+	marginTop: 100,
     borderRadius: 14,
-    marginBottom: 12,
   },
 
   buttonContinue: {

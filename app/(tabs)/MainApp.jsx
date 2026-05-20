@@ -123,7 +123,7 @@ export default function MainApp() {
 	  <Pressable
 	  	style={styles.buttonWakeUp}
 		onPress={() => router.push('/wake-reason')}>
-		<Text style={styles.buttonTextWakeUp}>your why</Text>
+		<Text style={styles.buttonTextWakeUp}>Your Goal</Text>
 	  </Pressable>
 
 	  <Pressable style={styles.button} onPress={resetOnboarding}>
@@ -170,9 +170,10 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		fontStyle: 'italic',
 		textAlign: 'center',
+		color: '#808080',
 	},
 	buttonVoice: {
-		backgroundColor: 'lightgray',
+		backgroundColor: '#DB6828',
 		paddingVertical: 15,
 		paddingHorizontal: 30,
 		borderRadius: 10,
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	buttonWakeUp: {
-		backgroundColor: 'gray',
+		backgroundColor: '#78736F',
 		paddingVertical: 15,
 		paddingHorizontal: 30,
 		borderRadius: 10,
@@ -190,12 +191,12 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	buttonTextVoice: {
-		color: 'gray',
+		color: 'white',
 		fontSize: 18,
 		fontWeight: 'bold',
 	},
 	buttonTextWakeUp: {
-		color: 'lightgray',
+		color: 'white',
 		fontSize: 18,
 		fontWeight: 'bold',
 	},
@@ -226,12 +227,12 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	wakeTimeText: {
-		fontSize: 80,
+		fontSize: 100,
 		fontWeight: 'bold',
-		color: '#8d8d8d',
-		textShadowColor: 'rgba(99, 99, 99, 0.5)',
-		textShadowOffset: { width: 4, height: 4 },
-		textShadowRadius: 20,
+		color: '#808080',
+		textShadowColor: 'rgba(0, 0, 0, 0.5)',
+		textShadowOffset: { width: 2, height: 2 },
+		textShadowRadius: 5,
 		marginBottom: 20,
 	},
 	holdText: {

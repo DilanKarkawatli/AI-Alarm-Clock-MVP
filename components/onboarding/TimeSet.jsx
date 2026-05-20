@@ -1,208 +1,259 @@
 /**
- * This component sets the alarm and creates the UI screen for setting the alarm
+ * This component picks the time to get set alongside the name and wakereason in the onDone button.
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Directory, File, Paths } from 'expo-file-system';
-import * as Notifications from 'expo-notifications';
-import { useEffect, useState } from 'react';
-import { Alert, NativeModules, Platform, Pressable, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { NativeModules, Platform, Pressable, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import DatePicker from "react-native-date-picker";
 const { AlarmScheduler } = NativeModules;
 
 type Props = {
 	onNext: () => void;
+	onSubmit?: (data: { time: string }) => Promise<void> | void;
 };
 
-export default function AlarmSetter({ onAlarmChange, onClose, onNext } : Props) {
+export default function TimeSet({ onAlarmChange, onClose, onSubmit, onNext } : Props) {
   const [time, setTime] = useState('');
   const [alarmInfo, setAlarmInfo] = useState(null);
   const [repeatDaily, setRepeatDaily] = useState(false)
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
 
-  // A useEffect function is a react hook that runs a function at a specific time
-  useEffect(() => {
-	const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-		console.log("ACTION PRESSED:", response.actionIdentifier);
+//   // A useEffect function is a react hook that runs a function at a specific time
+//   useEffect(() => {
+// 	const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+// 		console.log("ACTION PRESSED:", response.actionIdentifier);
 
-		if (response.actionIdentifier  === 'stop') {
-			cancelAlarm();
-		}
-	});
+// 		if (response.actionIdentifier  === 'stop') {
+// 			cancelAlarm();
+// 		}
+// 	});
 
-	return () => subscription.remove();
-  }, []);
+// 	return () => subscription.remove();
+//   }, []);
 
-   useEffect(() => {
-		Notifications.setNotificationCategoryAsync('alarm', [
-			{
-				identifier: 'stop',
-				buttonTitle: 'Stop',
-				options: {
-					isDestructive: true,
-				},
-			},
-		]);
-	}, []);
+//    useEffect(() => {
+// 		Notifications.setNotificationCategoryAsync('alarm', [
+// 			{
+// 				identifier: 'stop',
+// 				buttonTitle: 'Stop',
+// 				options: {
+// 					isDestructive: true,
+// 				},
+// 			},
+// 		]);
+// 	}, []);
 
-  const ensureAlarmPermissions = async () => {
-	if (Platform.OS === 'android') return true; // Handled by native module
+//   const ensureAlarmPermissions = async () => {
+// 	if (Platform.OS === 'android') return true; // Handled by native module
 	
-	const notif = await Notifications.requestPermissionsAsync()
-	const notifGranted = notif.granted || notif.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL;
+// 	const notif = await Notifications.requestPermissionsAsync()
+// 	const notifGranted = notif.granted || notif.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL;
 
-	if (!notifGranted) {
-		Alert.alert("Notifcations required", "Enable notifcations so alarms can fire in prod. builds.");
-		return false;
-	}
+// 	if (!notifGranted) {
+// 		Alert.alert("Notifcations required", "Enable notifcations so alarms can fire in prod. builds.");
+// 		return false;
+// 	}
 
-	if (AlarmScheduler?.canScheduleExactAlarms) {
-		const canExact = await AlarmScheduler.canScheduleExactAlarms();
-	if (!canExact) {
-		Alert.alert(
-			'Exact alarms required',
-			'Please allow exact alarms for this app in system settings.',
-			[
-			{ text: 'Cancel', style: 'cancel' },
-			{
-				text: 'Open settings',
-				onPress: () => AlarmScheduler?.openExactAlarmSettings?.(),
-			},
-			]
-		);
-		return false;
-		}
-	}
+// 	if (AlarmScheduler?.canScheduleExactAlarms) {
+// 		const canExact = await AlarmScheduler.canScheduleExactAlarms();
+// 	if (!canExact) {
+// 		Alert.alert(
+// 			'Exact alarms required',
+// 			'Please allow exact alarms for this app in system settings.',
+// 			[
+// 			{ text: 'Cancel', style: 'cancel' },
+// 			{
+// 				text: 'Open settings',
+// 				onPress: () => AlarmScheduler?.openExactAlarmSettings?.(),
+// 			},
+// 			]
+// 		);
+// 		return false;
+// 		}
+// 	}
 
-	return true;
-  }
+// 	return true;
+//   }
 
-  async function generateAlarmAudio(alarmDate) {
-	const voiceKey = (await AsyncStorage.getItem('selectedVoice')) || 'julian';
+//   async function generateAlarmAudio(alarmDate) {
+// 	//#######################################
+// 	const voiceKey = (await AsyncStorage.getItem('selectedVoice')) || 'julian';
 
-	// Grabs the name, email & goal data from onBoarding.jsx
-	const onboardingRaw = await AsyncStorage.getItem('user_data');
-	const onboarding = onboardingRaw ? JSON.parse(onboardingRaw) : {};
+// 	// Grabs the name, email & goal data from onBoarding.jsx
+// 	const onboardingRaw = await AsyncStorage.getItem('user_data');
+// 	console.log("RAW USER DATA:", onboardingRaw);
 
-	// Grabs the goal data from wake-reason.jsx
-	const profileRaw = await AsyncStorage.getItem('userProfile');
-	const profile = profileRaw ? JSON.parse(profileRaw) : {};
+// 	const onboarding = onboardingRaw ? JSON.parse(onboardingRaw) : {};
+// 	console.log("PARSED USER DATA:", onboarding);
 
-	const name = onboarding.name || 'friend';
-	const wakeReason = onboarding.goal || 'No goal provided';
+// 	const name = onboarding?.name ?? 'friend';
+// 	const wakeReason = onboarding?.goal ?? 'No goal provided';
 
-	const wakeTime = alarmDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+// 	console.log("NAME USED:", name);
+// 	console.log("GOAL USED:", wakeReason);
 
-	const baseUrl = process.env.EXPO_PUBLIC_API_URL;
+// 	// ############### Set Time ########################
 
-	if (!baseUrl) {
-		throw new Error('API base URL not working');
-	}
+// 	const wakeTime = alarmDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-	const response = await fetch(`${baseUrl}/generate-alarm`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ name, wakeTime, voiceKey, wakeReason }),
-	});
+// 	const baseUrl = process.env.EXPO_PUBLIC_API_URL;
 
-	const data = await response.json();
-	if (!response.ok) throw new Error(data.error || 'Failed to generate alarm');
-	console.log('Alarm audio URL stored:', data.file_key);
+// 	if (!baseUrl) {
+// 		throw new Error('API base URL not working');
+// 	}
 
-	const signedRes = await fetch(`${baseUrl}/alarms/${encodeURIComponent(data.file_key)}/download-url`);
-	const signedData = await signedRes.json();
-	if (!signedRes.ok || !signedData.download_url) throw new Error(signedData.error || 'Failed to get signed URL');
+// 	const response = await fetch(`${baseUrl}/generate-alarm`, {
+// 		method: 'POST',
+// 		headers: { 'Content-Type': 'application/json' },
+// 		body: JSON.stringify({ name, wakeTime, voiceKey, wakeReason }),
+// 	});
+
+// 	const data = await response.json();
+// 	if (!response.ok) throw new Error(data.error || 'Failed to generate alarm');
+// 	console.log('Alarm audio URL stored:', data.file_key);
+
+// 	const signedRes = await fetch(`${baseUrl}/alarms/${encodeURIComponent(data.file_key)}/download-url`);
+// 	const signedData = await signedRes.json();
+// 	if (!signedRes.ok || !signedData.download_url) throw new Error(signedData.error || 'Failed to get signed URL');
 
 
-	const alarmsDir = new Directory(Paths.document, 'alarms');
-	alarmsDir.create({ intermediates: true, idempotent: true });
-	const targetFile = new File(alarmsDir, 'latest-alarm.mp3');
+// 	const alarmsDir = new Directory(Paths.document, 'alarms');
+// 	alarmsDir.create({ intermediates: true, idempotent: true });
+// 	const targetFile = new File(alarmsDir, 'latest-alarm.mp3');
 
-	if (!data.file_key) throw new Error("Missing file_key from backend");
-	const downloadedFile = await File.downloadFileAsync(signedData.download_url, targetFile, { idempotent: true });
+// 	if (!data.file_key) throw new Error("Missing file_key from backend");
+// 	const downloadedFile = await File.downloadFileAsync(signedData.download_url, targetFile, { idempotent: true });
 
-	await AsyncStorage.setItem('latestAlarmLocalUri', downloadedFile.uri);
-	await AsyncStorage.setItem('latestAlarmRemoteUrl', data.file_key);
-	console.log('Alarm audio downloaded to:', downloadedFile.uri);
-	console.log('Alarm audio URL stored:', data.file_key);
+// 	await AsyncStorage.setItem('latestAlarmLocalUri', downloadedFile.uri);
+// 	await AsyncStorage.setItem('latestAlarmRemoteUrl', data.file_key);
+// 	console.log('Alarm audio downloaded to:', downloadedFile.uri);
+// 	console.log('Alarm audio URL stored:', data.file_key);
 
-	if (AlarmScheduler?.setAlarmSoundUri) {
-		await AlarmScheduler.setAlarmSoundUri(downloadedFile.uri);
-	}
-	console.log('Alarm sound URI set for native scheduler:', downloadedFile.uri);
-  }
+// 	if (AlarmScheduler?.setAlarmSoundUri) {
+// 		await AlarmScheduler.setAlarmSoundUri(downloadedFile.uri);
+// 	}
+// 	console.log('Alarm sound URI set for native scheduler:', downloadedFile.uri);
+//   }
 
-  const setAlarm = async () => {
-	const allowed = await ensureAlarmPermissions();
-	if (!allowed) return;
 
-	// ####### TIME LOGIC #######
+  //###### OLD SET ALARM ######
+
+//   const setAlarm = async () => {
+// 	const allowed = await ensureAlarmPermissions();
+// 	if (!allowed) return;
+
+// 	####### TIME LOGIC #######
+// 	const hours = date.getHours();
+// 	const minutes = date.getMinutes();
+
+// 	if (Number.isNaN(hours) || Number.isNaN(minutes)) return;
+
+//     const now = new Date();
+//     const alarm = new Date();
+
+//     alarm.setHours(hours);
+// 	alarm.setMinutes(minutes);
+//     alarm.setSeconds(0);
+// 	alarm.setMilliseconds(0);
+
+// //     // If time already passed today → tomorrow
+// //     if (alarm <= now) {
+// //       alarm.setDate(alarm.getDate() + 1);
+//     // }
+
+// 	// // ####### SCHEDULING #######
+// 	// await AsyncStorage.setItem('wakeTime', alarm.toISOString());
+// 	// await AsyncStorage.setItem('alarmRepeatDaily', repeatDaily.toString());
+
+// 	// schedule only once, after URI is saved
+// 	if (Platform.OS === 'android' && AlarmScheduler) {
+// 		console.log("CALLING NATIVE SCHEDULER");
+// 		await AlarmScheduler.scheduleAlarm(alarm.getTime(), repeatDaily);
+// 		console.log('Alarm scheduled on Android with repeat:', repeatDaily);
+// 	} else {
+// 		console.log("AlarmScheduler:", AlarmScheduler);
+// 		console.log('Check when no alarm is scheduled');
+// 	}
+
+// 	// // ####### UI REFRESHES #######
+// 	const formatted = alarm.toLocaleTimeString([], {
+// 		hour: '2-digit',
+// 		minute: '2-digit',
+// 	})
+// 	setAlarmInfo(formatted)
+// 	onAlarmChange?.(); // notify parent to refresh wake time display
+// 	onClose?.();
+
+// 	console.log('Alarm set for', alarm.toISOString());
+// 	console.log('Alarm audio URL stored:', await AsyncStorage.getItem("latestAlarmRemoteUrl"));
+
+	// ####### Generate Audio #######
+  	// await generateAlarmAudio(alarm); // Time intensive
+
+	// await onSubmit?.({
+// 		time: alarm.toISOString(),
+// 	});
+//   };
+
+const setAlarm = async () => {
+	// const allowed = await ensureAlarmPermissions();
+	// if (!allowed) return;
+
 	const hours = date.getHours();
 	const minutes = date.getMinutes();
 
 	if (Number.isNaN(hours) || Number.isNaN(minutes)) return;
 
-    const now = new Date();
-    const alarm = new Date();
+	const now = new Date();
+	const alarm = new Date();
 
-    alarm.setHours(hours);
+	alarm.setHours(hours);
 	alarm.setMinutes(minutes);
-    alarm.setSeconds(0);
+	alarm.setSeconds(0);
 	alarm.setMilliseconds(0);
 
+	if (alarm <= now) {
+		alarm.setDate(alarm.getDate() + 1);
+	}
 
-    // If time already passed today → tomorrow
-    if (alarm <= now) {
-      alarm.setDate(alarm.getDate() + 1);
-    }
+	await AsyncStorage.setItem("wakeTime", alarm.toISOString());
+	console.log("wakeTime LOGGED: ", alarm.toISOString())
 
-	// ####### SCHEDULING #######
-	await AsyncStorage.setItem('wakeTime', alarm.toISOString());
-	await AsyncStorage.setItem('alarmRepeatDaily', repeatDaily.toString());
+	await onSubmit?.({
+		time: alarm.toISOString(),
+	});
 
-	// schedule only once, after URI is saved
+	// await generateAlarmAudio(alarm);
+
 	if (Platform.OS === 'android' && AlarmScheduler) {
-		console.log("CALLING NATIVE SCHEDULER");
 		await AlarmScheduler.scheduleAlarm(alarm.getTime(), repeatDaily);
-		console.log('Alarm scheduled on Android with repeat:', repeatDaily);
-	} else {
-		console.log("AlarmScheduler:", AlarmScheduler);
-		console.log('Check when no alarm is scheduled');
 	}
 
-	// ####### UI REFRESHES #######
-	const formatted = alarm.toLocaleTimeString([], {
-		hour: '2-digit',
-		minute: '2-digit',
-	})
-	setAlarmInfo(formatted)
-	onAlarmChange?.(); // notify parent to refresh wake time display
-	onClose?.();
+};
 
-	console.log('Alarm set for', alarm.toISOString());
-	console.log('Alarm audio URL stored:', await AsyncStorage.getItem("latestAlarmRemoteUrl"));
 
-	// ####### Generate Audio #######
-  	await generateAlarmAudio(alarm); // Time intensive
-  };
-9
-  const cancelAlarm = async () => {
-	if (Platform.OS === 'android' && AlarmScheduler) {
-		await AlarmScheduler.setAlarmSoundUri(null);
-		await AlarmScheduler.cancelAlarm();
-		console.log("Cancel alarm triggered");
-	} else {
-		const id = await AsyncStorage.getItem('alarmNotificationId');
-		if (id) {
-			await Notifications.cancelScheduledNotificationAsync(id);
-		}
-		await AsyncStorage.removeItem('alarmNotificationId');
-	}
+// ### CANCEL ALARM ###
 
-	onAlarmChange?.();
-	onClose?.();
-  };
+//   const cancelAlarm = async () => {
+// 	if (Platform.OS === 'android' && AlarmScheduler) {
+// 		await AlarmScheduler.setAlarmSoundUri(null);
+// 		await AlarmScheduler.cancelAlarm();
+// 		console.log("Cancel alarm triggered");
+// 	} else {
+// 		const id = await AsyncStorage.getItem('alarmNotificationId');
+// 		if (id) {
+// 			await Notifications.cancelScheduledNotificationAsync(id);
+// 		}
+// 		await AsyncStorage.removeItem('alarmNotificationId');
+// 	}
+
+// 	onAlarmChange?.();
+// 	onClose?.();
+//   };
+
+// ### CANCEL ALARM ###
 
   return (
     <View style={styles.container}>

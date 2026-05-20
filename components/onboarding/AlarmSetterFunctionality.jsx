@@ -6,11 +6,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Directory, File, Paths } from 'expo-file-system';
 import * as Notifications from 'expo-notifications';
 import { useEffect, useState } from 'react';
-import { Alert, NativeModules, Platform, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import DatePicker from "react-native-date-picker";
+import { Alert, NativeModules, Platform, StyleSheet, View } from 'react-native';
 const { AlarmScheduler } = NativeModules;
 
-export default function AlarmSetter({ onAlarmChange, onClose }) {
+export default function AlarmSetterFunctionality({ onAlarmChange, onClose }) {
   const [time, setTime] = useState('');
   const [alarmInfo, setAlarmInfo] = useState(null);
   const [repeatDaily, setRepeatDaily] = useState(false)
@@ -175,19 +174,19 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 
 	if (Number.isNaN(hours) || Number.isNaN(minutes)) return;
 
-    const now = new Date();
-    const alarm = new Date();
+	const now = new Date();
+	const alarm = new Date();
 
-    alarm.setHours(hours);
+	alarm.setHours(hours);
 	alarm.setMinutes(minutes);
-    alarm.setSeconds(0);
+	alarm.setSeconds(0);
 	alarm.setMilliseconds(0);
 
 
-    // If time already passed today → tomorrow
-    if (alarm <= now) {
-      alarm.setDate(alarm.getDate() + 1);
-    }
+	// If time already passed today → tomorrow
+	if (alarm <= now) {
+	  alarm.setDate(alarm.getDate() + 1);
+	}
 
 	// ####### SCHEDULING #######
 	await AsyncStorage.setItem('wakeTime', alarm.toISOString());
@@ -216,9 +215,9 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	console.log('Alarm audio URL stored:', await AsyncStorage.getItem("latestAlarmRemoteUrl"));
 
 	// ####### Generate Audio #######
-  	await generateAlarmAudio(alarm); // Time intensive
+	await generateAlarmAudio(alarm); // Time intensive
   };
-9
+
   const cancelAlarm = async () => {
 	if (Platform.OS === 'android' && AlarmScheduler) {
 		await AlarmScheduler.setAlarmSoundUri(null);
@@ -237,16 +236,16 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
   };
 
   return (
-    <View style={styles.container}>
-		<Pressable
+	<View style={styles.container}>
+		{/* <Pressable
 			style={styles.input}
 			onPress={() => setOpen(true)}
 			>
 			<Text style={{ fontSize: 18 }}>
 				{date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
 			</Text>
-		</Pressable>
-		<DatePicker
+		</Pressable> */}
+		{/* <DatePicker
 			modal
 			open={open}
 			date={date}
@@ -268,56 +267,56 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 			thumbColor={repeatDaily ? '#f7f7f7' : '#f4f3f4'}
 			style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
 		/>
-	  </View>
+	  </View> */}
 
-      <Pressable style={styles.button} onPress={setAlarm}>
-        <Text style={styles.buttonText}>Set Alarm</Text>
-      </Pressable>
+	  {/* <Pressable style={styles.button} onPress={setAlarm}>
+		<Text style={styles.buttonText}>Set Alarm</Text>
+	  </Pressable> */}
 
-      <Pressable style={styles.cancelButton} onPress={cancelAlarm}>
-        <Text style={styles.buttonText}>Cancel</Text>
-      </Pressable>
+	  {/* <Pressable style={styles.cancelButton} onPress={cancelAlarm}>
+		<Text style={styles.buttonText}>Cancel</Text>
+	  </Pressable> */}
 
-      {alarmInfo &&
-        <Text style={styles.info}>
-          Alarm set for {alarmInfo}</Text>}
-    </View>
+	  {/* {alarmInfo &&
+		<Text style={styles.info}>
+		  Alarm set for {alarmInfo}</Text>} */}
+	</View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    alignItems: 'center',
+	width: '100%',
+	alignItems: 'center',
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15,
+	fontSize: 20,
+	fontWeight: 'bold',
+	marginBottom: 15,
   },
   button: {
-    backgroundColor: '#DB6828',
-    padding: 12,
+	backgroundColor: '#c99a00',
+	padding: 12,
 	
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 10,
+	borderRadius: 10,
+	width: '100%',
+	alignItems: 'center',
+	marginBottom: 10,
   },
   cancelButton: {
-    backgroundColor: '#999',
-    padding: 12,
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
+	backgroundColor: '#999',
+	padding: 12,
+	borderRadius: 10,
+	width: '100%',
+	alignItems: 'center',
   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
+	color: 'white',
+	fontWeight: 'bold',
   },
   info: {
-    marginTop: 15,
-    fontSize: 16,
+	marginTop: 15,
+	fontSize: 16,
   },
 	input: {
 	backgroundColor: "#d9d9d9",

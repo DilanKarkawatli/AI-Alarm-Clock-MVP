@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import {
 	StyleSheet,
@@ -15,6 +16,7 @@ export default function GoalBox( { onSubmit, onNext }: Props) {
 	const [goal, setGoal] = useState("");
 
 	const handleSubmit = async () => {
+		await AsyncStorage.setItem("goal", goal)
 		console.log(goal);
 		await onSubmit?.({ goal });
 	};

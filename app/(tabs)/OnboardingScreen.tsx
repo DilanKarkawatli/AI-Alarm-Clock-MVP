@@ -13,21 +13,14 @@ import NameBox from '../../components/onboarding/NameBox';
 import NotificationComponent from '../../components/onboarding/NotificationComponent';
 import ScrollVoice from '../../components/onboarding/ScrollVoice';
 import TimeSet from '../../components/onboarding/TimeSet';
-
-// const [fontsLoaded] = useFonts({
-//     Poppins: require('./assets/fonts/Poppins-Regular.ttf'),
-//     'Poppins-Bold': require('./assets/fonts/Poppins-Bold.ttf'),
-//   });
-
-// if (!fontsLoaded) {
-// 	return null;
-// }
+import { generateAlarmAudio, setAlarm } from '../../service/AlarmService';
 
 // type == custom typescript datastructure blueprint
 type User = {
 	onDone: (data: {
 		name: string;
 		goal: string;
+		wakeTime: string;
 	}) => void;
 };
 
@@ -47,7 +40,46 @@ const Begin = ({ ...props }) => (
 
 // "{ onDone }: User" tells onDone what typescript type it is
 export default function OnboardingScreen({ onDone }: User) {
+	// const [wakeTime, setWakeTime] = useState(null);
+	// const [timerVisible, setTimerVisible] = useState(false);
+
+	// const loadWakeTime = async () => {
+	// 	const wakeTime = await AsyncStorage.getItem('wakeTime');
+
+	// 	if (wakeTime) {
+	// 		// const date = new Date(wakeTime)
+
+	// 		// const formatted = date.toLocaleTimeString([], {
+	// 		// 			hour: '2-digit',
+	// 		// 			minute: '2-digit',
+	// 		// 			hour12: false,
+	// 		// })
+
+	// 		setWakeTime(formatted);
+
+	// 		} else {
+	// 			setWakeTime(null);
+	// 		}
+	// 	};
+
+	// useEffect(() => {
+	// 	loadWakeTime();
+	// }, []);
+	
+	
+//   const [username, setName] = useState<string | null>(null);
+
+//   useEffect(() => {
+// 	const loadName = async () => {
+// 		const savedName = await AsyncStorage.getItem("username");
+// 		setName(savedName);
+// 	};
+
+// 	loadName();
+//   }, []);
+
   const onboardingRef = useRef(null);
+
   return (
 	<View style={styles.container}>
 	  <Onboarding
@@ -77,14 +109,16 @@ export default function OnboardingScreen({ onDone }: User) {
 			}}
 	  		onSkip={() =>
 					onDone({
-						name: 'Ryan',
+						name: 'Friend',
 						goal: 'Wake up earlier',
+						wakeTime: ''
 					})
 			}
 			onDone={() =>
 				onDone({
-					name: 'Ryan',
+					name: 'Friend',
 					goal: 'Wake up earlier',
+					wakeTime: ''
 				})
 			}
 			ref={onboardingRef}
@@ -174,7 +208,33 @@ export default function OnboardingScreen({ onDone }: User) {
 							</Text>
 
 							<TimeSet
-								onNext={() => onboardingRef.current.goNext()}
+								onNext={async () => {
+									const name = await AsyncStorage.getItem('username');
+        							const goal = await AsyncStorage.getItem('goal');
+        							const wakeTime = await AsyncStorage.getItem('wakeTime');
+
+									await AsyncStorage.setItem(
+										'user_data',
+										JSON.stringify({ name, goal, wakeTime })
+									);
+
+									if (!wakeTime) {
+										return 
+									}
+
+									const wakeTimeDate = new Date(wakeTime)
+									
+									// #### [] SET TIME (REPLACE ALARMSETTER)
+									await generateAlarmAudio();
+									await setAlarm(wakeTimeDate, false);
+
+									// [] Make name & goal not null, i.e. store the values from onboarding, easy
+									console.log(name)
+									console.log(goal)
+									console.log("Waketime passed through: ", wakeTime)
+									
+									onboardingRef.current.goNext()
+								}}
 							/>
 						</View>
 					),
@@ -193,14 +253,18 @@ export default function OnboardingScreen({ onDone }: User) {
 
 							<NotificationComponent
 								onDone={async () => {
-									const name = await AsyncStorage.getItem('name');
+									const name = await AsyncStorage.getItem('username');
         							const goal = await AsyncStorage.getItem('goal');
+        							const wakeTime = await AsyncStorage.getItem('wakeTime');
+
 									// [] Make name & goal not null, i.e. store the values from onboarding, easy
-									console.log(name)
-									console.log(goal)
+									// console.log(name)
+									// console.log(goal)
+									// console.log("Waketime passed through: ", wakeTime)
 									onDone({
-										name: name || '', // await AsyncStorage.getItem(name),
+										name: name || '',
 										goal: goal || '',
+										wakeTime: wakeTime || '',
 									})
 								}}
 							/>

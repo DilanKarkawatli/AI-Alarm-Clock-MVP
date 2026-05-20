@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import {
 	StyleSheet,
@@ -9,13 +10,17 @@ import {
 
 type Props = {
 	onNext: () => void;
+	onSubmit?: (data: { name: string }) => Promise<void> | void;
 };
 
 export default function NameBox( { onSubmit, onNext }: Props) {
 	const [name, setName] = useState("");
 
 	const handleSubmit = async () => {
+		await AsyncStorage.setItem("username", name);
+
 		console.log(name);
+
 		await onSubmit?.({ name });
 	};
 
