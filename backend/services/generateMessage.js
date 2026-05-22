@@ -12,7 +12,7 @@ export async function generateMessage(prompt) {
 				content: Array.isArray(prompt) ? prompt.join('\n') : prompt
 			}
 		],
-		"max_tokens": 25
+		"max_tokens": 100,
 	});
 
 	console.log("Message: ", completion)
