@@ -9,6 +9,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.dilank.alarmclockai.alarm.AlarmReceiver
+import com.dilank.alarmclockai.alarm.AlarmSoundService
 
 class AlarmSchedulerModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
   private val logTag = "AlarmSchedulerModule"
@@ -48,27 +49,33 @@ class AlarmSchedulerModule(reactContext: ReactApplicationContext) : ReactContext
 
   @ReactMethod
   fun cancelAlarm() {
-    val context = reactApplicationContext
-    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    val intent = Intent(context, AlarmReceiver::class.java)
-    val pendingIntent = PendingIntent.getBroadcast(
-      context,
-      AlarmReceiver.ALARM_REQUEST_CODE,
-      intent,
-      PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-    )
-    alarmManager.cancel(pendingIntent)
-    
-    // Clear preferences
-    val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    prefs.edit().apply {
-      remove(AlarmReceiver.KEY_REPEAT_DAILY)
-      remove(AlarmReceiver.KEY_ALARM_TIME_MILLIS)
-      apply()
-    }
-    
-    Log.d(logTag, "Alarm cancelled and preferences cleared")
-  }
+		val context = reactApplicationContext
+
+		val alarmManager =
+			context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+		val intent = Intent(context, AlarmReceiver::class.java).apply {
+			action = "com.dilank.alarmclockai.ALARM_TRIGGER"
+		}
+
+		val pendingIntent = PendingIntent.getBroadcast(
+			context,
+			AlarmReceiver.ALARM_REQUEST_CODE,
+			intent,
+			PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+		)
+
+		alarmManager.cancel(pendingIntent)
+		pendingIntent.cancel()
+
+		// STOP FOREGROUND SERVICE
+		val serviceIntent =
+			Intent(context, AlarmSoundService::class.java)
+
+		context.stopService(serviceIntent)
+
+		Log.d(logTag, "Alarm cancelled")
+	}
 
   @ReactMethod
   fun setAlarmSoundUri(uri: String) {

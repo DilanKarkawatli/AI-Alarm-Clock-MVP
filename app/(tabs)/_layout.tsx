@@ -23,6 +23,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="choose-voice" options={{ headerShown: false }} />
         <Stack.Screen name="wake-reason" options={{ headerShown: false }} />
+        <Stack.Screen name="alarm-ring" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

@@ -221,7 +221,7 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 9
   const cancelAlarm = async () => {
 	if (Platform.OS === 'android' && AlarmScheduler) {
-		await AlarmScheduler.setAlarmSoundUri(null);
+		// await AlarmScheduler.setAlarmSoundUri(null);
 		await AlarmScheduler.cancelAlarm();
 		console.log("Cancel alarm triggered");
 	} else {
@@ -270,11 +270,20 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 		/>
 	  </View>
 
-      <Pressable style={styles.button} onPress={setAlarm}>
+      <Pressable style={({ pressed }) => [
+				styles.button,
+				pressed && styles.buttonPressed
+			]}
+		onPress={setAlarm}>
         <Text style={styles.buttonText}>Set Alarm</Text>
       </Pressable>
 
-      <Pressable style={styles.cancelButton} onPress={cancelAlarm}>
+      <Pressable 
+	  		style={({ pressed }) => [
+				styles.cancelButton,
+				pressed && styles.cancelButtonPressed
+			]}
+			onPress={cancelAlarm}>
         <Text style={styles.buttonText}>Cancel</Text>
       </Pressable>
 
@@ -289,6 +298,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     alignItems: 'center',
+	backgroundColor: '#f2f2f2',
   },
   title: {
     fontSize: 20,
@@ -298,14 +308,28 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#DB6828',
     padding: 12,
-	
+    borderRadius: 10,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  buttonPressed: {
+    backgroundColor: '#e05c14',
+    padding: 12,
     borderRadius: 10,
     width: '100%',
     alignItems: 'center',
     marginBottom: 10,
   },
   cancelButton: {
-    backgroundColor: '#999',
+    backgroundColor: '#78736F',
+    padding: 12,
+    borderRadius: 10,
+    width: '100%',
+    alignItems: 'center',
+  },
+  cancelButtonPressed: {
+    backgroundColor: '#635f5b',
     padding: 12,
     borderRadius: 10,
     width: '100%',

@@ -123,13 +123,23 @@ export default function MainApp() {
 		<View style={styles.bottomSection}>
 
 			<Pressable
-				style={styles.buttonVoice}
+				style={({ pressed }) => [
+					styles.buttonVoice,
+					pressed && styles.buttonVoicePressed
+				]}
+
+				// style={styles.buttonVoice}
 				onPress={() => router.push('/choose-voice')}>
 				<Text style={styles.buttonTextVoice}>Choose Voice</Text>
 			</Pressable>
 			
 			<Pressable
-				style={styles.buttonWakeUp}
+				style={({ pressed }) => [
+					styles.buttonWakeUp,
+					pressed && styles.buttonWakeUpPressed
+				]}
+
+				// style={styles.buttonWakeUp}
 				onPress={() => router.push('/wake-reason')}>
 				<Text style={styles.buttonTextWakeUp}>Your Goal</Text>
 			</Pressable>
@@ -163,6 +173,7 @@ export default function MainApp() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		backgroundColor: '#f2f2f2',
 		// justifyContent: 'center',
 		// alignItems: 'center',
 		// paddingHorizontal: 40,
@@ -209,8 +220,26 @@ const styles = StyleSheet.create({
 		width: screenWidth * 0.65, //'100%',
 		alignItems: 'center',
 	},
+	buttonVoicePressed: {
+		backgroundColor: '#d3530d',
+		paddingVertical: screenWidth * 0.03, // 15
+		paddingHorizontal: 30,
+		borderRadius: 10,
+		marginBottom: 20,
+		width: screenWidth * 0.65, //'100%',
+		alignItems: 'center',
+	},
 	buttonWakeUp: {
 		backgroundColor: '#78736F',
+		paddingVertical: screenWidth * 0.03, // 15
+		paddingHorizontal: 30,
+		borderRadius: 10,
+		marginBottom: 20,
+		width: screenWidth * 0.65, //'100%',
+		alignItems: 'center',
+	},
+	buttonWakeUpPressed: {
+		backgroundColor: '#635f5b',
 		paddingVertical: screenWidth * 0.03, // 15
 		paddingHorizontal: 30,
 		borderRadius: 10,

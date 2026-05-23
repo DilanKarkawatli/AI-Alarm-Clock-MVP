@@ -9,6 +9,7 @@
   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
   <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -37,8 +38,8 @@
         <data android:scheme="exp+alarm-clock-ai"/>
       </intent-filter>
     </activity>
-    <receiver android:name=".alarm.AlarmReceiver" android:enabled="true" android:exported="false"/>
-    <receiver android:name=".alarm.BootReceiver" android:enabled="true" android:exported="false">
+    <receiver android:name=".alarm.AlarmReceiver" android:enabled="true" android:exported="true"/>
+    <receiver android:name=".alarm.BootReceiver" android:enabled="true" android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
         <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED"/>

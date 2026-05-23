@@ -11,8 +11,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import com.dilank.alarmclockai.MainActivity
+// import com.dilank.alarmclockai.MainActivity
 import java.util.Calendar
+import android.net.Uri
 
 // AlarmReceiver is the listener that Android wakes up when the alarm fires
 class AlarmReceiver : BroadcastReceiver() {
@@ -55,7 +56,10 @@ class AlarmReceiver : BroadcastReceiver() {
         }
 
         // Launch the app UI
-        val alarmIntent = Intent(context, MainActivity::class.java).apply {
+        val alarmIntent = Intent(
+			Intent.ACTION_VIEW,
+    		Uri.parse("alarmclockai://alarm-ring")
+			).apply {
             flags =
                 Intent.FLAG_ACTIVITY_NEW_TASK or
                 Intent.FLAG_ACTIVITY_CLEAR_TOP or
@@ -64,6 +68,20 @@ class AlarmReceiver : BroadcastReceiver() {
         }
 
         context.startActivity(alarmIntent)
+
+        // // Launch the app UI
+        // val alarmIntent = Intent(
+		// 	context, 
+		// 	MainActivity::class.java
+		// 	).apply {
+        //     flags =
+        //         Intent.FLAG_ACTIVITY_NEW_TASK or
+        //         Intent.FLAG_ACTIVITY_CLEAR_TOP or
+        //         Intent.FLAG_ACTIVITY_SINGLE_TOP
+        //     putExtra("alarm_triggered", true)
+        // }
+
+        // context.startActivity(alarmIntent)
 
 		// Check if this alarm repeats daily
 		val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

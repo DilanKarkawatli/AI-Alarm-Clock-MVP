@@ -2,6 +2,7 @@
  * Handles screen for changing the wake reason in the app
  */
 
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { profileTemplate } from '../../data/profileTemplate';
@@ -9,6 +10,7 @@ import { profileTemplate } from '../../data/profileTemplate';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function WakeReason() {
+	const router = useRouter();
 	const [profile, setProfile] = useState(profileTemplate)
 	const [savedGoal, setSavedGoal] = useState("");
 
@@ -79,8 +81,15 @@ export default function WakeReason() {
 			/>
 
 			<Pressable
-				style={styles.button}
-				onPress={saveProfile}
+				style={({ pressed }) => [
+					styles.button,
+					pressed && styles.buttonPressed,
+				]}
+				onPress={() => {
+					saveProfile();
+					router.back();
+				}
+					}
 			>
 				<Text style={styles.buttonText}>Save</Text>
 			</Pressable>
@@ -94,6 +103,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingHorizontal: 30,
 		paddingTop: 80,
+		backgroundColor: '#f2f2f2',
 	},
 	titleText: {
 		fontSize: 24,
@@ -112,6 +122,12 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		backgroundColor: 'gray',
+		paddingVertical: 15,
+		borderRadius: 10,
+		alignItems: 'center',
+	},
+	buttonPressed: {
+		backgroundColor: '#6b6b6b',
 		paddingVertical: 15,
 		borderRadius: 10,
 		alignItems: 'center',

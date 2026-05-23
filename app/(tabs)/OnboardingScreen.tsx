@@ -40,44 +40,6 @@ const Begin = ({ ...props }) => (
 
 // "{ onDone }: User" tells onDone what typescript type it is
 export default function OnboardingScreen({ onDone }: User) {
-	// const [wakeTime, setWakeTime] = useState(null);
-	// const [timerVisible, setTimerVisible] = useState(false);
-
-	// const loadWakeTime = async () => {
-	// 	const wakeTime = await AsyncStorage.getItem('wakeTime');
-
-	// 	if (wakeTime) {
-	// 		// const date = new Date(wakeTime)
-
-	// 		// const formatted = date.toLocaleTimeString([], {
-	// 		// 			hour: '2-digit',
-	// 		// 			minute: '2-digit',
-	// 		// 			hour12: false,
-	// 		// })
-
-	// 		setWakeTime(formatted);
-
-	// 		} else {
-	// 			setWakeTime(null);
-	// 		}
-	// 	};
-
-	// useEffect(() => {
-	// 	loadWakeTime();
-	// }, []);
-	
-	
-//   const [username, setName] = useState<string | null>(null);
-
-//   useEffect(() => {
-// 	const loadName = async () => {
-// 		const savedName = await AsyncStorage.getItem("username");
-// 		setName(savedName);
-// 	};
-
-// 	loadName();
-//   }, []);
-
   const onboardingRef = useRef(null);
 
   return (

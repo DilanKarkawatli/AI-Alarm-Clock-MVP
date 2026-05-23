@@ -20,6 +20,8 @@ export default function TimeSet({ onAlarmChange, onClose, onSubmit, onNext } : P
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
 //   // A useEffect function is a react hook that runs a function at a specific time
 //   useEffect(() => {
 // 	const subscription = Notifications.addNotificationResponseReceivedListener(response => {
@@ -290,17 +292,72 @@ const setAlarm = async () => {
 	  </View>
 
       <TouchableOpacity 
-	  	style={styles.button} 
-	  	onPress={() => {
-			setAlarm();
+	  	style={styles.button}
+		disabled={loading}
+	  	onPress={async () => {
+
+			setLoading(true);
+
+			await setAlarm();
+			setLoading(false);
 			onNext();
+			setLoading(false);
+			
+			// try {
+			// 	await setAlarm();
+			// 	onNext();
+			// } finally {
+			// 	setLoading(false);
+			// }
+
+
+			// setAlarm();
+			// onNext();
 			}} >
         <Text style={styles.buttonText}>Set Alarm</Text>
       </TouchableOpacity>
 
+	  <Text style={styles.loading}>Small wait might occur</Text>
+
+      {/* <TouchableOpacity 
+	  	style={styles.button}
+		disabled={loading}
+	  	onPress={async () => {
+
+			setLoading(true);
+
+			await setAlarm();
+			setLoading(false);
+			onNext();
+			setLoading(false);
+			
+			// try {
+			// 	await setAlarm();
+			// 	onNext();
+			// } finally {
+			// 	setLoading(false);
+			// }
+
+
+			// setAlarm();
+			// onNext();
+			}} >
+        <Text style={[
+			styles.buttonText,
+			loading && styles.buttonTextDisabled
+		]}>{loading ? 'Setting Alarm...' : 'Set Alarm'}</Text>
+      </TouchableOpacity> */}
+
+	  {/* {loading && (
+			<Text style={styles.loading}>
+				Loading...
+			</Text>
+		)} */}
+
       {alarmInfo &&
         <Text style={styles.info}>
           Alarm set for {alarmInfo}</Text>}
+
     </View>
   );
 }
@@ -334,8 +391,16 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  loading: {
+	color: '#474747',
+	textAlign: 'center',
+  },
   buttonText: {
     color: 'white',
+    fontWeight: 'bold',
+  },
+  buttonTextDisabled: {
+    color: 'gray',
     fontWeight: 'bold',
   },
   info: {

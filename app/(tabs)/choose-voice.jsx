@@ -110,8 +110,6 @@ export default function chooseVoice() {
 		</View>
 	)
 }
-
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -119,6 +117,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingHorizontal: 30,
 		paddingTop: 80,
+		backgroundColor: '#f2f2f2',
 	},
 	titleText: {
 		fontSize: 24,
