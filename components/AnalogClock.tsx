@@ -34,7 +34,7 @@ import { Easing, withTiming } from 'react-native-reanimated';
 
 
 const { width } = Dimensions.get('window');
-const CLOCK_SIZE = width * 0.7
+const CLOCK_SIZE = width * 0.75
 const CENTER = CLOCK_SIZE / 2
 
 const AnalogClock = () => {

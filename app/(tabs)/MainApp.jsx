@@ -107,7 +107,6 @@ export default function MainApp() {
 		style={styles.container}
 		colors={["#fcefe7", "#ffeadc"]}
 		>
-		
 		<View style={styles.topSection}>
 
 			{wakeTime && (
@@ -158,7 +157,7 @@ export default function MainApp() {
 
 				<LinearGradient
 					style={styles.buttonWakeUp}
-					colors={["#e7e7e7", "#ffffff"]}
+					colors={["#f3e7db", "#fcf3eb"]}
 					end={{ x: 0.5, y: 1}}
 					start={{ x: 0.5, y: 0}}
 				
@@ -167,9 +166,9 @@ export default function MainApp() {
 				</LinearGradient>
 			</Pressable>
 
-			<Pressable style={styles.buttonDev} onPress={resetOnboarding}>
+			{/* <Pressable style={styles.buttonDev} onPress={resetOnboarding}>
 				<Text>Reset Onboarding (Dev)</Text>
-			</Pressable>
+			</Pressable> */}
 		</View>
 
 	  <Modal
@@ -179,13 +178,16 @@ export default function MainApp() {
 		presentationStyle="overFullScreen"
 	  >
 		<View style={styles.modalOverlay}>
-			<View style={styles.modalContent}>
+			<LinearGradient 
+				colors={["#fcefe7", "#ffeadc"]}
+				style={styles.modalContent}
+			>
 				<Text style={styles.modalTitle}>Alarm Clock</Text>
 				<AlarmSetter 
 					onAlarmChange={loadWakeTime}
 					onClose={() => setTimerVisible(false)}
 				/>
-			</View>
+			</LinearGradient>
 		</View>
 	  </Modal>
 
@@ -200,13 +202,13 @@ const styles = StyleSheet.create({
 		backgroundColor: '#f2f2f2',
 	},
 	topSection: {
-		marginTop: screenWidth * 0.28,
+		marginTop: screenWidth * 0.32,
 		flex: 3,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	bottomSection: {
-		paddingVertical: 40,
+		paddingVertical: 50,
 		flex: 2,
 		marginTop: screenWidth * 0.2,
 		justifyContent: 'flex-start',
@@ -219,9 +221,6 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		borderRadius: 100,
 	},
-	// clock: {
-	// 	shadowColor: '#fff',
-	// },
 
 	// #### Buttons
 	buttonWrapper: {
@@ -270,8 +269,8 @@ const styles = StyleSheet.create({
 	holdText: {
 		fontSize: 14,
 		fontWeight: 'italic',
-		color: '#8d8d8d',
-		marginTop: 20,
+		color: '#999999',
+		marginTop: 24,
 	},
 	onboarding: {
 		align: "center",
@@ -282,15 +281,11 @@ const styles = StyleSheet.create({
 	},
 	wakeTimeText: {
 		fontSize: moderateScale(70), //100
-		fontWeight: 'bold',
-		color: '#000000',
-		textShadowColor: 'rgba(255, 210, 86, 0.5)',
-		textShadowOffset: { width: 2, height: 2 },
-		textShadowRadius: 5,
+		fontWeight: '500',
+		color: '#1f1e1e',
 		paddingVertical: 20,
 		resizeMode: "contain",
 	},
-
 
 	//#### Modal
 	modalOverlay: {

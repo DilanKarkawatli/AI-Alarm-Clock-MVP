@@ -2,9 +2,10 @@
  * Handles screen for changing the wake reason in the app
  */
 
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput } from 'react-native';
 import { profileTemplate } from '../../data/profileTemplate';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -61,20 +62,26 @@ export default function WakeReason() {
 	}, []);
 
 	return (
-		<View style={styles.container}>
-			<Text style={styles.titleText}>What's your why?</Text>
+		<LinearGradient 
+		colors={["#ffffff", "#fff0d9"]}
+		style={styles.container}
+		>
+			<Text style={styles.titleText}>Change your Goal</Text>
 
-			<View style={styles.goalBox}>
+			<LinearGradient 
+				style={styles.goalBox}
+				colors={["#ffffff", "#e6e6e6"]}
+			>
 				<Text style={styles.goalTitle}>Goal:</Text> 
 				
 				<Text style={styles.goalText}>
 					{savedGoal || "You haven't set a goal yet"}
 				</Text>
-			</View>
+			</LinearGradient>
 
 			<TextInput
 				style={styles.input}
-				placeholder="Why do you want to wake up?"
+				placeholder="Let the AI knpw what you want to accomplish"
 				value={profile.wakeReason}
 				onChangeText={handleChange}
 				multiline
@@ -82,19 +89,25 @@ export default function WakeReason() {
 
 			<Pressable
 				style={({ pressed }) => [
-					styles.button,
+					styles.buttonWrapper,
 					pressed && styles.buttonPressed,
 				]}
 				onPress={() => {
 					saveProfile();
 					router.back();
 				}
-					}
+				}
 			>
-				<Text style={styles.buttonText}>Save</Text>
+				<LinearGradient
+					colors={["#ffbf84", "#ff5900"]}
+					end={{ x: 0.5, y: 1}}
+					start={{ x: 0.5, y: 0}}
+					style={styles.button}
+				>
+					<Text style={styles.buttonText}>Save</Text>
+				</LinearGradient>
 			</Pressable>
-				
-		</View>
+		</LinearGradient>
 	)
 }
 
@@ -112,25 +125,26 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	input: {
-		backgroundColor: '#e0e0e0',
+		backgroundColor: '#ffffff',
 		borderRadius: 10,
 		padding: 15,
-		fontSize: 16,
-		minHeight: 120,
+		fontSize: 12,
+		minHeight: 220,
 		textAlignVertical: 'top',
-		marginBottom: 20,
+		marginBottom: 25,
+	},
+	buttonWrapper: {
+		borderRadius: 20,
+		elevation: 10,
 	},
 	button: {
-		backgroundColor: 'gray',
 		paddingVertical: 15,
 		borderRadius: 10,
+		width: '100%',
 		alignItems: 'center',
 	},
 	buttonPressed: {
-		backgroundColor: '#6b6b6b',
-		paddingVertical: 15,
-		borderRadius: 10,
-		alignItems: 'center',
+		transform: [{ scale: 0.97 }],
 	},
 	buttonText: {
 		color: 'white',
@@ -153,16 +167,15 @@ const styles = StyleSheet.create({
 
 	goalTitle: {
 		fontSize: 16,
-		fontWeight: 'bold',
+		fontWeight: '500',
 		marginBottom: 10,
 		color: '#666',
 	},
 
 	goalText: {
-		fontSize: 18,
-		fontWeight: '600',
+		fontSize: 12,
+		fontWeight: '300',
 		color: '#333',
 		fontWeight: 'thin',
-		fontStyle: 'italic',
 	},
 })

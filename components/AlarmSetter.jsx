@@ -6,9 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Directory, File, Paths } from 'expo-file-system';
 import * as Notifications from 'expo-notifications';
 import { useEffect, useState } from 'react';
-import { Alert, NativeModules, Platform, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
+import { Alert, Dimensions, NativeModules, Platform, Pressable, SafeAreaView, StyleSheet, Switch, Text, View } from 'react-native';
 import DatePicker from "react-native-date-picker";
+import LinearGradient from 'react-native-linear-gradient';
 const { AlarmScheduler } = NativeModules;
+
+const screenWidth = Dimensions.get('window').width;
 
 export default function AlarmSetter({ onAlarmChange, onClose }) {
   const [time, setTime] = useState('');
@@ -237,7 +240,9 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView 
+		style={styles.container}
+	>
 		<Pressable
 			style={styles.input}
 			onPress={() => setOpen(true)}
@@ -271,26 +276,41 @@ export default function AlarmSetter({ onAlarmChange, onClose }) {
 	  </View>
 
       <Pressable style={({ pressed }) => [
-				styles.button,
+				styles.buttonWrapper,
 				pressed && styles.buttonPressed
 			]}
 		onPress={setAlarm}>
-        <Text style={styles.buttonText}>Set Alarm</Text>
+		<LinearGradient
+			style={styles.button}
+			colors={["#ffbf84", "#ff5900"]}
+			end={{ x: 0.5, y: 1}}
+			start={{ x: 0.5, y: 0}}
+		>
+			<Text style={styles.buttonTextSet}>Set Alarm</Text>
+		</LinearGradient>
+        {/* <Text style={styles.buttonText}>Set Alarm</Text> */}
       </Pressable>
 
       <Pressable 
 	  		style={({ pressed }) => [
-				styles.cancelButton,
-				pressed && styles.cancelButtonPressed
+				styles.buttonWrapper,
+				pressed && styles.buttonPressed
 			]}
 			onPress={cancelAlarm}>
-        <Text style={styles.buttonText}>Cancel</Text>
+			<LinearGradient
+				style={styles.button}
+				colors={["#e7e7e7", "#ffffff"]}
+				end={{ x: 0.5, y: 1}}
+				start={{ x: 0.5, y: 0}}
+			>
+				<Text style={styles.buttonTextCancel}>Cancel</Text>
+			</LinearGradient>
       </Pressable>
 
       {alarmInfo &&
         <Text style={styles.info}>
           Alarm set for {alarmInfo}</Text>}
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -298,45 +318,49 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     alignItems: 'center',
-	backgroundColor: '#f2f2f2',
+	// backgroundColor: 'transparent',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 15,
   },
+  buttonWrapper: {
+	borderRadius: 10,
+	marginBottom: 15,
+	width: '100%',
+	alignItems: 'center',
+    marginBottom: 10,
+
+	shadowColor: '#000000',
+	shadowOffset: {
+		width: 0,
+		height: 12,
+	},
+	shadowOpacity: 0.25,
+	shadowRadius: 6,
+	// elevation: 4,
+  },
+
   button: {
-    backgroundColor: '#DB6828',
+    // backgroundColor: '#DB6828',
     padding: 12,
     borderRadius: 10,
     width: '100%',
     alignItems: 'center',
     marginBottom: 10,
+	elevation: 8,
   },
   buttonPressed: {
-    backgroundColor: '#e05c14',
-    padding: 12,
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 10,
+    transform: [{ scale: 0.97 }],
   },
-  cancelButton: {
-    backgroundColor: '#78736F',
-    padding: 12,
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
-  },
-  cancelButtonPressed: {
-    backgroundColor: '#635f5b',
-    padding: 12,
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
-  },
-  buttonText: {
+
+  buttonTextSet: {
     color: 'white',
+    fontWeight: 'bold',
+  },
+  buttonTextCancel: {
+    color: 'black',
     fontWeight: 'bold',
   },
   info: {
@@ -344,7 +368,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 	input: {
-	backgroundColor: "#d9d9d9",
+	backgroundColor: "#ffffff",
 	padding: 18,
 	borderRadius: 12,
 	width: "100%",

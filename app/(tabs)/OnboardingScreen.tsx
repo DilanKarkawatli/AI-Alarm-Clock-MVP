@@ -208,7 +208,7 @@ export default function OnboardingScreen({ onDone }: User) {
 							/>
 
 							<Text style={styles.smallText}>
-								Tip: Set the alarm one minute ahead to hear it quicker!
+								Tip: Set the alarm one minute ahead to hear it quicker.
 							</Text>
 						</View>
 					),
