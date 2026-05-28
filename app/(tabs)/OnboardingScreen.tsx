@@ -13,7 +13,7 @@ import NameBox from '../../components/onboarding/NameBox';
 import NotificationComponent from '../../components/onboarding/NotificationComponent';
 import ScrollVoice from '../../components/onboarding/ScrollVoice';
 import TimeSet from '../../components/onboarding/TimeSet';
-import { generateAlarmAudio, setAlarm } from '../../service/AlarmService';
+import { setAlarm } from '../../service/AlarmService';
 
 // type == custom typescript datastructure blueprint
 type User = {
@@ -124,6 +124,9 @@ export default function OnboardingScreen({ onDone }: User) {
 							<NameBox 
 								onNext={() => onboardingRef.current.goNext()}
 							/>
+							<Text style={styles.smallText}>
+								Your name will be heard in the alarm
+							</Text>
 						</View>
 					),
 					title: '',
@@ -140,6 +143,10 @@ export default function OnboardingScreen({ onDone }: User) {
 							<GoalBox 
 								onNext={() => onboardingRef.current.goNext()}
 							/>
+
+							<Text style={styles.smallText}>
+								You will be reminded about your goal in the alarm
+							</Text>
 						</View>
 					),
 					title: '',
@@ -156,6 +163,7 @@ export default function OnboardingScreen({ onDone }: User) {
 							<ScrollVoice
 								onNext={() => onboardingRef.current.goNext()}
 							/>
+							
 						</View>
 					),
 					title: '',
@@ -187,7 +195,7 @@ export default function OnboardingScreen({ onDone }: User) {
 									const wakeTimeDate = new Date(wakeTime)
 									
 									// #### [] SET TIME (REPLACE ALARMSETTER)
-									await generateAlarmAudio();
+									// await generateAlarmAudio();
 									await setAlarm(wakeTimeDate, false);
 
 									// [] Make name & goal not null, i.e. store the values from onboarding, easy
@@ -198,6 +206,10 @@ export default function OnboardingScreen({ onDone }: User) {
 									onboardingRef.current.goNext()
 								}}
 							/>
+
+							<Text style={styles.smallText}>
+								Tip: Set the alarm one minute ahead to hear it quicker!
+							</Text>
 						</View>
 					),
 					title: '',
@@ -316,5 +328,10 @@ const styles = StyleSheet.create({
 		borderRadius: 24,
 		width: '90%',
 		alignSelf: 'center',
+	},
+	smallText: {
+		textAlign: 'center',
+		paddingVertical: 20,
+		fontWeight: 'bold'
 	}
 })

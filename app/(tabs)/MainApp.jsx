@@ -7,10 +7,12 @@ import { createAudioPlayer } from 'expo-audio';
 import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Dimensions, Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Dimensions, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+// import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { moderateScale } from 'react-native-size-matters';
 import AlarmSetter from '../../components/AlarmSetter';
+import AnalogClock from '../../components/AnalogClock';
 import { voices } from '../../data/voices';
 
 const screenWidth = Dimensions.get('window').width;
@@ -101,7 +103,10 @@ export default function MainApp() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <LinearGradient 
+		style={styles.container}
+		colors={["#fcefe7", "#ffeadc"]}
+		>
 		
 		<View style={styles.topSection}>
 
@@ -110,12 +115,13 @@ export default function MainApp() {
 					{wakeTime}
 				</Text>
 			)}
-	  
+
 			<Pressable onLongPress={() => setTimerVisible(true)}>
-				<Image 
+				{/* <Image 
 					style={styles.image} 
 					source={require('../../assets/images/clock-icon-1.png')}
-				/>
+				/> */}
+				<AnalogClock style={styles.clock} />
 			</Pressable>
 
 			<Text style={styles.holdText}> Hold to set time </Text>
@@ -124,24 +130,41 @@ export default function MainApp() {
 
 			<Pressable
 				style={({ pressed }) => [
-					styles.buttonVoice,
-					pressed && styles.buttonVoicePressed
+					styles.buttonWrapper,
+					pressed && styles.buttonPressed
 				]}
 
-				// style={styles.buttonVoice}
-				onPress={() => router.push('/choose-voice')}>
-				<Text style={styles.buttonTextVoice}>Choose Voice</Text>
+				onPress={() => router.push('/choose-voice')}
+			>
+
+				<LinearGradient
+					colors={["#ffbf84", "#ff5900"]}
+					end={{ x: 0.5, y: 1}}
+					start={{ x: 0.5, y: 0}}
+					style={styles.buttonVoice}
+				>
+					<Text style={styles.buttonTextVoice}>Choose Voice</Text>
+				</LinearGradient>
 			</Pressable>
 			
 			<Pressable
 				style={({ pressed }) => [
-					styles.buttonWakeUp,
-					pressed && styles.buttonWakeUpPressed
+					styles.buttonWrapper,
+					pressed && styles.buttonPressed
 				]}
 
-				// style={styles.buttonWakeUp}
 				onPress={() => router.push('/wake-reason')}>
-				<Text style={styles.buttonTextWakeUp}>Your Goal</Text>
+
+
+				<LinearGradient
+					style={styles.buttonWakeUp}
+					colors={["#e7e7e7", "#ffffff"]}
+					end={{ x: 0.5, y: 1}}
+					start={{ x: 0.5, y: 0}}
+				
+				>
+					<Text style={styles.buttonTextWakeUp}>Your Goal</Text>
+				</LinearGradient>
 			</Pressable>
 
 			<Pressable style={styles.buttonDev} onPress={resetOnboarding}>
@@ -166,44 +189,22 @@ export default function MainApp() {
 		</View>
 	  </Modal>
 
-    </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+	// #### Structure Components
 	container: {
 		flex: 1,
 		backgroundColor: '#f2f2f2',
-		// justifyContent: 'center',
-		// alignItems: 'center',
-		// paddingHorizontal: 40,
 	},
-
-	// Top section
 	topSection: {
-		marginTop: screenWidth * 0.23,
+		marginTop: screenWidth * 0.28,
 		flex: 3,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	image: {
-		width: screenWidth * 0.65,
-		height: screenWidth * 0.65,
-		resizeMode: 'contain',
-		marginTop: 10,
-		marginBottom: 10,
-		borderRadius: 100,
-	},
-	// text: {
-	// 	fontSize: 24,
-	// 	fontWeight: 'bold',
-	// 	marginBottom: 10,
-	// 	fontStyle: 'italic',
-	// 	textAlign: 'center',
-	// 	color: '#808080',
-	// },
-
-	// Bottom section
 	bottomSection: {
 		paddingVertical: 40,
 		flex: 2,
@@ -211,57 +212,66 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		alignItems: 'center'
 	},
-	buttonVoice: {
-		backgroundColor: '#DB6828',
-		paddingVertical: screenWidth * 0.03, // 15
-		paddingHorizontal: 30,
-		borderRadius: 10,
-		marginBottom: 20,
-		width: screenWidth * 0.65, //'100%',
-		alignItems: 'center',
+	image: {
+		width: screenWidth * 0.65,
+		height: screenWidth * 0.65,
+		resizeMode: 'contain',
+		marginBottom: 10,
+		borderRadius: 100,
 	},
-	buttonVoicePressed: {
-		backgroundColor: '#d3530d',
-		paddingVertical: screenWidth * 0.03, // 15
+	// clock: {
+	// 	shadowColor: '#fff',
+	// },
+
+	// #### Buttons
+	buttonWrapper: {
+		borderRadius: 20,
+		marginBottom: 15,
+
+		shadowColor: '#000000',
+		shadowOffset: {
+			width: 0,
+			height: 12,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 12,
+
+		elevation: 14,
+	},
+	buttonVoice: {
+		paddingVertical: screenWidth * 0.035,
 		paddingHorizontal: 30,
-		borderRadius: 10,
-		marginBottom: 20,
-		width: screenWidth * 0.65, //'100%',
+		borderRadius: 18,
 		alignItems: 'center',
+		width: screenWidth * 0.65, //'100%',
 	},
 	buttonWakeUp: {
-		backgroundColor: '#78736F',
-		paddingVertical: screenWidth * 0.03, // 15
+		paddingVertical: screenWidth * 0.035, // 15
 		paddingHorizontal: 30,
-		borderRadius: 10,
-		marginBottom: 20,
+		borderRadius: 18,
 		width: screenWidth * 0.65, //'100%',
 		alignItems: 'center',
 	},
-	buttonWakeUpPressed: {
-		backgroundColor: '#635f5b',
-		paddingVertical: screenWidth * 0.03, // 15
-		paddingHorizontal: 30,
-		borderRadius: 10,
-		marginBottom: 20,
-		width: screenWidth * 0.65, //'100%',
-		alignItems: 'center',
+	buttonPressed: {
+		transform: [{ scale: 0.97 }],
 	},
+
+	// #### Text
 	buttonTextVoice: {
 		color: 'white',
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 	buttonTextWakeUp: {
-		color: 'white',
-		fontSize: 18,
+		color: 'black',
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 	holdText: {
 		fontSize: 14,
 		fontWeight: 'italic',
 		color: '#8d8d8d',
-		marginBottom: 20,
+		marginTop: 20,
 	},
 	onboarding: {
 		align: "center",
@@ -270,9 +280,19 @@ const styles = StyleSheet.create({
 	buttonDev: {
 		align: 'center',
 	},
+	wakeTimeText: {
+		fontSize: moderateScale(70), //100
+		fontWeight: 'bold',
+		color: '#000000',
+		textShadowColor: 'rgba(255, 210, 86, 0.5)',
+		textShadowOffset: { width: 2, height: 2 },
+		textShadowRadius: 5,
+		paddingVertical: 20,
+		resizeMode: "contain",
+	},
 
 
-	// Modal
+	//#### Modal
 	modalOverlay: {
 		flex: 1,
 		backgroundColor: 'rgba(126, 126, 126, 0.5)',
@@ -298,15 +318,5 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		width: '100%',
 		alignItems: 'center',
-	},
-	wakeTimeText: {
-		fontSize: moderateScale(80), //100
-		fontWeight: 'bold',
-		color: '#808080',
-		textShadowColor: 'rgba(0, 0, 0, 0.5)',
-		textShadowOffset: { width: 2, height: 2 },
-		textShadowRadius: 5,
-		paddingVertical: 20,
-		resizeMode: "contain",
 	},
 })
