@@ -5,15 +5,16 @@ export function generatePrompt(name = 'Friend', wakeTime = '07:00', wakeReason =
 
 	if (process.env.DEV_MODE) {
 		const prompt = [
-			`Your goal is: ${wakeReason}
-			Write a personalized morning greeting for ${name}.
-			The user has set a wake up time of ${wakeTime} and their reason for waking up is: ${wakeReason}.
+			`Write a personalized morning greeting for ${name}.
+			Your goal is: ${wakeReason}. Also the goal/wakereason can have instructions.
+			The user has set a wake up time of ${wakeTime}.
 			Do these:
 			- Wise and assertive
 			- Not too nice, tough and brutal.
-			- Under 10 words!!
 
 			Remember, the main purpose is to get the user to wake up!
+
+			Be motivational, wise and a bit casual.
 
 			User name: ${name}
 			Wake time: ${wakeTime}

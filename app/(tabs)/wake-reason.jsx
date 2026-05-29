@@ -81,7 +81,7 @@ export default function WakeReason() {
 
 			<TextInput
 				style={styles.input}
-				placeholder="Let the AI knpw what you want to accomplish"
+				placeholder="Let the AI know what you want to accomplish"
 				value={profile.wakeReason}
 				onChangeText={handleChange}
 				multiline

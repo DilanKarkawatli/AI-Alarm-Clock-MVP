@@ -31,6 +31,8 @@ export async function generateSpeech(text, voiceKey) {
 			}),
 		});
 
+	console.log(response)
+
 	const contentType = response.headers.get("content-type");
 	console.log("Content-Type:", contentType);
 

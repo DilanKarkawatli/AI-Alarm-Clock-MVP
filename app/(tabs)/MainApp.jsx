@@ -166,9 +166,9 @@ export default function MainApp() {
 				</LinearGradient>
 			</Pressable>
 
-			{/* <Pressable style={styles.buttonDev} onPress={resetOnboarding}>
+			<Pressable style={styles.buttonDev} onPress={resetOnboarding}>
 				<Text>Reset Onboarding (Dev)</Text>
-			</Pressable> */}
+			</Pressable>
 		</View>
 
 	  <Modal
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
 	modalContent: {
 		width: '80%',
 		backgroundColor: 'white',
-		borderRadius: 10,
+		borderRadius: 20,
 		padding: 20,
 		alignItems: 'center',
 	},
